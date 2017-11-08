@@ -1,0 +1,12 @@
+{
+    "hostapd_file": "/etc/hostapd/hostapd.conf",
+    "init_d_file": "/etc/init.d/run_server",
+    "identity_file": "/home/pi/discovery/identity",
+
+    "blueprint_file": "/home/pi/middleware/blueprint.json",
+    "middleware_runner_file": "/home/pi/middleware/run_server.sh",
+
+    "extra_commands": [
+        "sudo chmod +x /etc/init.d/run_server"
+    ]
+}
