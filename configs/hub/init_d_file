@@ -1,0 +1,5 @@
+#!/bin/sh
+cd /home/pi/aggregator
+./run_aggregator.sh
+cd /home/pi/discovery
+./run_discovery

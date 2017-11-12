@@ -6,13 +6,7 @@ import sys
 import importlib
 import argparse
 import json
-
-try:
-    CONFIG_NAME = sys.argv[1]
-    sys.argv = [sys.argv[0]] + sys.argv[2:]
-except:
-    print ("Usage: {} <config-name> [options]".format(sys.argv[0]))
-    os.exit(0)
+import netifaces
 
 parser = argparse.ArgumentParser(description='Configure Raspberry Pi')
 
@@ -30,16 +24,18 @@ parser.add_argument("-t", "--type", required=False, type=int, default=3, help="T
 parser.add_argument("-cla", "--clone_arduino", required=False, type=str, help="Clone arduino repository")
 parser.add_argument("-clm", "--clone_middleware", required=False, type=str, help="Clone middleware repository")
 parser.add_argument("-cld", "--clone_discovery", required=False, type=str, help="Clone discovery repository")
-parser.add_argument("-stp", "--setup", required=False, action='store_true', help="Perform file setup")
+parser.add_argument("-clg", "--clone_aggregator", required=False, type=str, help="Clone aggregator repository")
+parser.add_argument("-stp", "--setup", required=False, type=str, help="Perform file setup")
 parser.add_argument("-dla", "--download_arduino", required=False, action='store_true', help="Download Arduino software to Arduino")
+parser.add_argument("-blg", "--build_aggregator", required=False, action='store_true', help="Build the aggregator from source")
 
 cmd_args = parser.parse_args()
 
 my_username = os.getlogin()
-my_ip = "192.168.10.14"
+my_ip = list(filter(lambda ipl: len(ipl) > 0 and "192.168.10." in ipl[0], (list(map(lambda iface: list(map(lambda s: s.get('addr', ''), netifaces.ifaddresses(iface).get(netifaces.AF_INET, []))), netifaces.interfaces())))))[0][0]
 
 ARGUMENTS = {}
-if cmd_args.setup:
+if cmd_args.setup != None:
     ARGUMENTS = {
         "BLUEPRINT_NAME": cmd_args.room,
         "SSID": cmd_args.ssid,
@@ -49,13 +45,19 @@ if cmd_args.setup:
         "IDENTITY_STRING": cmd_args.identity,
     }
 
-config_json = json.load(open(os.path.join("configs", CONFIG_NAME, "config.json"), "r"))
-extra_commands = config_json.get("extra_commands", [])
-if "extra_commands" in config_json:
-    del config_json["extra_commands"]
+    for a in ARGUMENTS.keys():
+        if ARGUMENTS[a] == None:
+            print ("Missing argument {}".format(a))
+            sys.exit(1)
+
+if cmd_args.setup != None:
+    config_json = json.load(open(os.path.join("configs", cmd_args.setup, "config.json"), "r"))
+    extra_commands = config_json.get("extra_commands", [])
+    if "extra_commands" in config_json:
+        del config_json["extra_commands"]
 
 search_dirs = [
-    os.path.join("configs", CONFIG_NAME),
+    os.path.join("configs", cmd_args.setup if cmd_args.setup != None else ""),
     os.path.join("configs", "general"),
 ]
 
@@ -80,13 +82,21 @@ with open("tmp/initializer.sh", "w") as initializer_file:
         initializer_file.write("sudo rm -rf /home/pi/discovery && git clone {}@{}:{} /home/pi/discovery\n".format(my_username, my_ip, cmd_args.clone_discovery))
     if cmd_args.clone_arduino:
         initializer_file.write("sudo rm -rf /home/pi/arduino && git clone {}@{}:{} /home/pi/arduino\n".format(my_username, my_ip, cmd_args.clone_arduino))
+    if cmd_args.clone_aggregator:
+        initializer_file.write("sudo rm -rf /home/pi/aggregator && git clone {}@{}:{} /home/pi/aggregator\n".format(my_username, my_ip, cmd_args.clone_aggregator))
 
     # Write the burning of arduino to the intiializer script
     if cmd_args.download_arduino:
-        intiializer_file.write("cd /home/pi/arduino/ && ./upload.sh mega2560\n")
+        initializer_file.write("sudo killall python && sudo killall python3.6 && cd /home/pi/arduino/ && ./upload.sh mega2560\n")
+
+    # Write the building of the aggregator to the initializer script
+    if cmd_args.build_aggregator:
+        initializer_file.write("cd /home/pi/aggregator/ && make\n")
 
     # Write the rest of file copying to the initializer script
-    if cmd_args.setup:
+    if cmd_args.setup != None:
+        for c in extra_commands:
+            initializer_file.write("{}\n".format(c))
         for fname in config_json.keys():
             target_name = config_json[fname]
             Fin = find_and_open_file(fname)
@@ -98,8 +108,6 @@ with open("tmp/initializer.sh", "w") as initializer_file:
                 F.write(content)
 
             initializer_file.write("sudo cp /home/pi/initializer/{} {}\n".format(fname, target_name))
-        for c in extra_commands:
-            initializer_file.write("{}\n".format(c))
     initializer_file.write("sudo rm -rf /home/pi/initializer/\n")
 
 os.system("sshpass -p {} scp -r {} {}@{}:{}".format(cmd_args.password, "tmp/*", cmd_args.user, cmd_args.piip,  "/home/pi/initializer/"))

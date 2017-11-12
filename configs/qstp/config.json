@@ -3,10 +3,11 @@
     "init_d_file": "/etc/init.d/run_server",
     "identity_file": "/home/pi/discovery/identity",
 
-    "blueprint_file": "/home/pi/middleware/blueprint.json",
+    "blueprint_file": "/home/pi/middleware/blueprint_qstp.json",
     "middleware_runner_file": "/home/pi/middleware/run_server.sh",
 
     "extra_commands": [
-        "sudo chmod +x /etc/init.d/run_server"
+        "sudo chmod +x /etc/init.d/run_server",
+        "cd /home/pi/middleware/ && git reset --hard && git checkout dev"
     ]
 }

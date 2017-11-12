@@ -10,6 +10,11 @@ echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9sDAwtfroed7pIApK1491i6hlETx4A4p7h7
 - unified_2_1.img
 OS: Raspbian for RBP 3.0
 Python: 2
-Comment: Has old code pre-installed
+Credentials: pi/notdefault
+Comment: Auto hosts hotspot automation/notdefaultatall (WPA2).
 
-
+-unified_2_2.img
+OS: Raspbain for RBP 3.0
+Python: 3
+Credentials: pi/notdefault
+Comment: Auto hosts hotspot automation/notdefaultatall (WPA2).

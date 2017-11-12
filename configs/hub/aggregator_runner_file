@@ -1,0 +1,5 @@
+#!/bin/sh
+cd /home/pi/aggregator
+
+echo "Running the aggregator..."
+./aggregator 1> /dev/null 2>&1 &

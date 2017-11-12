@@ -8,6 +8,7 @@
     "controller_config_file": "/home/pi/middleware/config/controllers_config.py",
 
     "extra_commands": [
-        "sudo chmod +x /etc/init.d/run_server"
+        "sudo chmod +x /etc/init.d/run_server",
+        "cd /home/pi/middleware/ && git reset --hard && git checkout master"
     ]
 }

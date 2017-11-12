@@ -1,11 +1,11 @@
 [{
     "name": {{BLUEPRINT_NAME}},
     "grid": [{
-        "ratio": 2,
+        "ratio": 3,
         "panels": [{
             "ratio": 5,
             "name": {
-                "en": "Room Lights",
+                "en": "Room Lighting",
                 "ar": "إضائة الغرفة"
             },
             "things": [{
@@ -21,7 +21,7 @@
                 "name": {
                     "en": "Light switch 1"
                 },
-                "switch_port": "d40",
+                "switch_port": "d44",
                 "id": "lightswitch-8",
                 "default_wakeup_value": 1
             }, {
@@ -29,71 +29,32 @@
                 "name": {
                     "en": "Light switch 2"
                 },
-                "switch_port": "d35",
+                "switch_port": "d45",
                 "id": "lightswitch-7",
                 "default_wakeup_value": 1
+            }]
+        }, {
+            "ratio": 3,
+            "name": {
+                "en": "Bathroom Lighting",
+                "ar": "إضائة الغرفة"
+            },
+            "things": [{
+                "category": "dimmers",
+                "name": {
+                    "en": "Dimmer 2"
+                },
+                "dimmer_port": "v2",
+                "virtual_port_data": [[1, 50, 1, 5]],
+                "default_wakeup_value": 100
             }, {
                 "category": "light_switches",
                 "name": {
                     "en": "Light switch 3"
                 },
-                "switch_port": "d34",
-                "id": "lightswitch-6",
+                "switch_port": "d46",
+                "id": "lightswitch-9",
                 "default_wakeup_value": 1
-            }, {
-                "category": "light_switches",
-                "name": {
-                    "en": "Light switch 4"
-                },
-                "switch_port": "d48",
-                "id": "lightswitch-5",
-                "default_wakeup_value": 1
-            }]
-        }, {
-            "ratio": 5,
-            "name": {
-                "en": "Bathroom Lights"
-            },
-            "things": [{
-                "category": "dimmers",
-                "name": {
-                    "en": "Bathroom dimmer"
-                },
-                "dimmer_port": "v2",
-                "virtual_port_data": [[1, 50, 1, 5]],
-                "default_wakeup_value": 0
-            }, {
-                "category": "light_switches",
-                "name": {
-                    "en": "Light switch 5"
-                },
-                "switch_port": "d39",
-                "id": "lightswitch-4",
-                "default_wakeup_value": 0
-            }, {
-                "category": "light_switches",
-                "name": {
-                    "en": "Light switch 6"
-                },
-                "switch_port": "d38",
-                "id": "lightswitch-3",
-                "default_wakeup_value": 0
-            }, {
-                "category": "light_switches",
-                "name": {
-                    "en": "Light switch 7"
-                },
-                "switch_port": "d22",
-                "id": "lightswitch-2",
-                "default_wakeup_value": 0
-            }, {
-                "category": "light_switches",
-                "name": {
-                    "en": "Light switch 8"
-                },
-                "switch_port": "d21",
-                "id": "lightswitch-1",
-                "default_wakeup_value": 0
             }]
         }]
     }, {
@@ -111,8 +72,8 @@
                     "ar": "التكييف"
                 },
                 "temperature_port": "v0",
-                "fan_port": "d42",
-                "digital_valve_port": "d43",
+                "fan_port": "d50",
+                "digital_valve_port": "d49",
                 "virtual_port_data": [[0, 0]],
                 "default_sleep_temperature": 25.0
             }]
@@ -126,10 +87,10 @@
                 "name": {
                     "en": "Hotel Controls"
                 },
-                "power_port": "d45",
+                "power_port": "d51",
                 "hotel_card": "d41",
-                "do_not_disturb_port": "d37",
-                "room_service_port": "d36"
+                "do_not_disturb_port": "d47",
+                "room_service_port": "d48"
             }]
         }]
     }],
