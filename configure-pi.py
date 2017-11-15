@@ -7,12 +7,14 @@ import importlib
 import argparse
 import json
 import netifaces
+import re
 
 parser = argparse.ArgumentParser(description='Configure Raspberry Pi')
 
 parser.add_argument("-ip", "--piip", required=False, type=str, default="192.168.10.1", help="IP of the raspberry PI to SSH to")
 parser.add_argument("-u", "--user", required=False, type=str, default="pi", help="Username of the raspberry PI to SSH to")
 parser.add_argument("-p", "--password", required=False, type=str, default="notdefault", help="Password of the raspberry PI to SSH to")
+parser.add_argument("-myip", "--myip", required=False, type=str, help="IP of this machine")
 
 parser.add_argument("-r", "--room", required=False, type=str, help="Name of the room (JSON of the format \{\"en\": \"english name\", \"ar\": \"arabic name\"\})")
 parser.add_argument("-s", "--ssid", required=False, type=str, help="Name of the broadcasted ssid")
@@ -20,6 +22,7 @@ parser.add_argument("-sp", "--ssid_pw", required=False, default="notdefaultatall
 parser.add_argument("-c", "--channel", required=False, type=int, help="Network channel to use")
 parser.add_argument("-i", "--identity", required=False, type=str, help="Discovery protocol identity (without type, e.g.: Room 4:somedata)")
 parser.add_argument("-t", "--type", required=False, type=int, default=3, help="Type of the device for the discovery protocol")
+parser.add_argument("-hws", "--hub_websock", required=False, type=str, help="Set the hub websocket address (e.g. wss://www.verboze.com/stream/<token>/)")
 
 parser.add_argument("-cla", "--clone_arduino", required=False, type=str, help="Clone arduino repository")
 parser.add_argument("-clm", "--clone_middleware", required=False, type=str, help="Clone middleware repository")
@@ -32,7 +35,10 @@ parser.add_argument("-blg", "--build_aggregator", required=False, action='store_
 cmd_args = parser.parse_args()
 
 my_username = os.getlogin()
-my_ip = list(filter(lambda ipl: len(ipl) > 0 and "192.168.10." in ipl[0], (list(map(lambda iface: list(map(lambda s: s.get('addr', ''), netifaces.ifaddresses(iface).get(netifaces.AF_INET, []))), netifaces.interfaces())))))[0][0]
+if cmd_args.myip:
+    my_ip = cmd_args.myip
+else:
+    my_ip = list(filter(lambda ipl: len(ipl) > 0 and "192.168.10." in ipl[0], (list(map(lambda iface: list(map(lambda s: s.get('addr', ''), netifaces.ifaddresses(iface).get(netifaces.AF_INET, []))), netifaces.interfaces())))))[0][0]
 
 ARGUMENTS = {}
 if cmd_args.setup != None:
@@ -43,12 +49,8 @@ if cmd_args.setup != None:
         "WPA_PASS": cmd_args.ssid_pw,
         "IDENTITY_TYPE": cmd_args.type,
         "IDENTITY_STRING": cmd_args.identity,
+        "WEBSOCKET_ADDR": cmd_args.hub_websock,
     }
-
-    for a in ARGUMENTS.keys():
-        if ARGUMENTS[a] == None:
-            print ("Missing argument {}".format(a))
-            sys.exit(1)
 
 if cmd_args.setup != None:
     config_json = json.load(open(os.path.join("configs", cmd_args.setup, "config.json"), "r"))
@@ -100,10 +102,14 @@ with open("tmp/initializer.sh", "w") as initializer_file:
         for fname in config_json.keys():
             target_name = config_json[fname]
             Fin = find_and_open_file(fname)
+            if Fin == None:
+                print ("File {} not found!".format(fname))
             content = Fin.read()
             Fin.close()
-            for kw in ARGUMENTS.keys():
-                content = content.replace("{{%s}}" % str(kw), str(ARGUMENTS[kw]))
+
+            for kw in re.findall('\{\{(.+)\}\}', content):
+                content = content.replace("{{" + kw + "}}", ARGUMENTS[kw])
+
             with open(os.path.join("tmp", fname), "w") as F:
                 F.write(content)
 

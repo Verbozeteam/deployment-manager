@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Disable eth1 from giving DNS resolution
+resolvconf -d eth1
+
+cd /home/pi/aggregator
+./run_aggregator.sh

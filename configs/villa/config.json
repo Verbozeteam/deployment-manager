@@ -1,5 +1,6 @@
 {
     "hostapd_file": "/etc/hostapd/hostapd.conf",
+    "interfaces_file": "/etc/network/interfaces",
     "init_d_file": "/etc/init.d/run_server",
     "identity_file": "/home/pi/discovery/identity",
 
