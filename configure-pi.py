@@ -54,9 +54,12 @@ if cmd_args.setup != None:
 
 if cmd_args.setup != None:
     config_json = json.load(open(os.path.join("configs", cmd_args.setup, "config.json"), "r"))
-    extra_commands = config_json.get("extra_commands", [])
-    if "extra_commands" in config_json:
-        del config_json["extra_commands"]
+    extra_commands_before = config_json.get("extra_commands_before", [])
+    if "extra_commands_before" in config_json:
+        del config_json["extra_commands_before"]
+    extra_commands_after = config_json.get("extra_commands_after", [])
+    if "extra_commands_after" in config_json:
+        del config_json["extra_commands_after"]
 
 search_dirs = [
     os.path.join("configs", cmd_args.setup if cmd_args.setup != None else ""),
@@ -93,12 +96,13 @@ with open("tmp/initializer.sh", "w") as initializer_file:
 
     # Write the building of the aggregator to the initializer script
     if cmd_args.build_aggregator:
-        initializer_file.write("cd /home/pi/aggregator/ && make\n")
+        initializer_file.write("cd /home/pi/aggregator/ && make -j4 && find /home/pi/aggregator/ ! -name 'aggregator' ! -name 'log_files' -exec rm -rf {} +\n")
 
     # Write the rest of file copying to the initializer script
     if cmd_args.setup != None:
-        for c in extra_commands:
+        for c in extra_commands_before:
             initializer_file.write("{}\n".format(c))
+
         for fname in config_json.keys():
             target_name = config_json[fname]
             Fin = find_and_open_file(fname)
@@ -108,12 +112,19 @@ with open("tmp/initializer.sh", "w") as initializer_file:
             Fin.close()
 
             for kw in re.findall('\{\{(.+)\}\}', content):
-                content = content.replace("{{" + kw + "}}", ARGUMENTS[kw])
+                try:
+                    content = content.replace("{{" + kw + "}}", str(ARGUMENTS[kw]))
+                except Exception as e:
+                    print ("missing argument for {}".format(kw))
+                    sys.exit(1)
 
             with open(os.path.join("tmp", fname), "w") as F:
                 F.write(content)
 
             initializer_file.write("sudo cp /home/pi/initializer/{} {}\n".format(fname, target_name))
+
+        for c in extra_commands_after:
+            initializer_file.write("{}\n".format(c))
     initializer_file.write("sudo rm -rf /home/pi/initializer/\n")
 
 os.system("sshpass -p {} scp -r {} {}@{}:{}".format(cmd_args.password, "tmp/*", cmd_args.user, cmd_args.piip,  "/home/pi/initializer/"))

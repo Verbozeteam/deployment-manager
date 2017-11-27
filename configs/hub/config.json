@@ -5,7 +5,7 @@
 
     "aggregator_runner_file": "/home/pi/aggregator/run_aggregator.sh",
 
-    "extra_commands": [
+    "extra_commands_after": [
         "sudo chmod +x /etc/init.d/run_server",
         "sudo chmod +x /home/pi/aggregator/run_aggregator.sh"
     ]

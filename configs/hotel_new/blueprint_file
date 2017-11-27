@@ -1,0 +1,121 @@
+[{
+    "name": {{BLUEPRINT_NAME}},
+    "grid": [{
+        "ratio": 3,
+        "panels": [{
+            "ratio": 6,
+            "name": {
+                "en": "Room Lights",
+                "ar": "إضائة الغرفة"
+            },
+            "things": [{
+                "category": "dimmers",
+                "name": {
+                    "en": "Dimmer 1"
+                },
+                "dimmer_port": "v1",
+                "virtual_port_data": [[1, 50, 1, 4]],
+                "default_wakeup_value": 100
+            }, {
+                "category": "light_switches",
+                "name": {
+                    "en": "Light switch 1"
+                },
+                "switch_port": "d40",
+                "id": "lightswitch-8",
+                "default_wakeup_value": 1
+            }, {
+                "category": "light_switches",
+                "name": {
+                    "en": "Light switch 2"
+                },
+                "switch_port": "d35",
+                "id": "lightswitch-7",
+                "default_wakeup_value": 1
+            }, {
+                "category": "light_switches",
+                "name": {
+                    "en": "Light switch 3"
+                },
+                "switch_port": "d34",
+                "id": "lightswitch-6",
+                "default_wakeup_value": 1
+            }]
+        }, {
+            "ratio": 3,
+            "name": {
+                "en": "Bathroom Lights",
+                "ar": "إضاءة الحمام"
+            },
+            "things": [{
+                "category": "dimmers",
+                "name": {
+                    "en": "Bathroom dimmer"
+                },
+                "dimmer_port": "v2",
+                "virtual_port_data": [[1, 50, 1, 5]],
+                "default_wakeup_value": 0
+            }, {
+                "category": "light_switches",
+                "name": {
+                    "en": "Light switch 5"
+                },
+                "switch_port": "d39",
+                "id": "lightswitch-4",
+                "default_wakeup_value": 0
+            }, {
+                "category": "light_switches",
+                "name": {
+                    "en": "Light switch 6"
+                },
+                "switch_port": "d38",
+                "id": "lightswitch-3",
+                "default_wakeup_value": 0
+            }]
+        }]
+    }, {
+        "ratio": 2,
+        "panels": [{
+            "ratio": 5,
+            "name": {
+                "en": "Air Conditioning",
+                "ar": "التكييف"
+            },
+            "things": [{
+                "category": "central_acs",
+                "name": {
+                    "en": "Air Conditioning",
+                    "ar": "التكييف"
+                },
+                "temperature_port": "v0",
+                "fan_port": "d42",
+                "digital_valve_port": "d43",
+                "virtual_port_data": [[0, 0]],
+                "default_sleep_temperature": 25.0
+            }]
+        }, {
+            "ratio": 5,
+            "name": {
+                "en": "Hotel Controls"
+            },
+            "things": [{
+                "category": "hotel_controls",
+                "name": {
+                    "en": "Room Service",
+                    "ar": "خدمات الغرفة"
+                },
+                "power_port": "d45",
+                "hotel_card": "d41",
+                "do_not_disturb_port": "d37",
+                "room_service_port": "d36"
+            }]
+        }]
+    }],
+    "detail": {
+        "ratio": 4,
+        "side": "right"
+    },
+    "layout": {
+        "margin": 5
+    }
+}]

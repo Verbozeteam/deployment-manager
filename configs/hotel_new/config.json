@@ -4,10 +4,12 @@
     "init_d_file": "/etc/init.d/run_server",
     "identity_file": "/home/pi/discovery/identity",
 
-    "blueprint_file": "/home/pi/middleware/blueprint_villa.json",
+    "blueprint_file": "/home/pi/middleware/blueprint_hotel.json",
     "middleware_runner_file": "/home/pi/middleware/run_server.sh",
-    "controller_config_file": "/home/pi/middleware/config/controllers_config.py",
 
+    "extra_commands_before": [
+        "cd /home/pi/middleware/ && git reset --hard && git checkout dev"
+    ],
     "extra_commands_after": [
         "sudo chmod +x /etc/init.d/run_server"
     ]
