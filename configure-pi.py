@@ -38,7 +38,11 @@ my_username = os.getlogin()
 if cmd_args.myip:
     my_ip = cmd_args.myip
 else:
-    my_ip = list(filter(lambda ipl: len(ipl) > 0 and "192.168.10." in ipl[0], (list(map(lambda iface: list(map(lambda s: s.get('addr', ''), netifaces.ifaddresses(iface).get(netifaces.AF_INET, []))), netifaces.interfaces())))))[0][0]
+    try:
+        my_ip = list(filter(lambda ipl: len(ipl) > 0 and "192.168.10." in ipl[0], (list(map(lambda iface: list(map(lambda s: s.get('addr', ''), netifaces.ifaddresses(iface).get(netifaces.AF_INET, []))), netifaces.interfaces())))))[0][0]
+    except:
+        print ("Please connect to the RBPi's wifi")
+        sys.exit(1)
 
 ARGUMENTS = {}
 if cmd_args.setup != None:
@@ -92,7 +96,7 @@ with open("tmp/initializer.sh", "w") as initializer_file:
 
     # Write the burning of arduino to the intiializer script
     if cmd_args.download_arduino:
-        initializer_file.write("sudo killall python && sudo killall python3.6 && cd /home/pi/arduino/ && ./upload.sh mega2560\n")
+        initializer_file.write("sudo killall python ; sudo killall python3.6 ; cd /home/pi/arduino/ && ./upload.sh mega2560\n")
 
     # Write the building of the aggregator to the initializer script
     if cmd_args.build_aggregator:

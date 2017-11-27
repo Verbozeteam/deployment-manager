@@ -90,7 +90,8 @@
                 "power_port": "d51",
                 "hotel_card": "d41",
                 "do_not_disturb_port": "d47",
-                "room_service_port": "d48"
+                "room_service_port": "d48",
+                "card_in_state": 0
             }]
         }]
     }],
