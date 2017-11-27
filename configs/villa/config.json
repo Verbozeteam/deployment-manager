@@ -8,6 +8,9 @@
     "middleware_runner_file": "/home/pi/middleware/run_server.sh",
     "controller_config_file": "/home/pi/middleware/config/controllers_config.py",
 
+    "extra_commands_before": [
+        "cd /home/pi/middleware/ && git reset --hard && git checkout legacy"
+    ],
     "extra_commands_after": [
         "sudo chmod +x /etc/init.d/run_server"
     ]

@@ -10,6 +10,6 @@
 
     "extra_commands": [
         "sudo chmod +x /etc/init.d/run_server",
-        "cd /home/pi/middleware/ && git reset --hard && git checkout master"
+        "cd /home/pi/middleware/ && git reset --hard && git checkout legacy"
     ]
 }
