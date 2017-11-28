@@ -11,7 +11,8 @@
             "things": [{
                 "category": "dimmers",
                 "name": {
-                    "en": "Dimmer 1"
+                    "en": "Bedside",
+                    "ar": "جانب السرير"
                 },
                 "id": "dimmer-1",
                 "dimmer_port": "v1",
@@ -20,7 +21,8 @@
             }, {
                 "category": "light_switches",
                 "name": {
-                    "en": "Light switch 1"
+                    "en": "Main",
+                    "ar": "الرئيسي"
                 },
                 "switch_port": "d44",
                 "id": "lightswitch-1",
@@ -28,7 +30,8 @@
             }, {
                 "category": "light_switches",
                 "name": {
-                    "en": "Light switch 2"
+                    "en": "Side",
+                    "ar": "الجانبي"
                 },
                 "switch_port": "d45",
                 "id": "lightswitch-2",
@@ -36,7 +39,8 @@
             }, {
                 "category": "light_switches",
                 "name": {
-                    "en": "Light switch 3"
+                    "en": "Entrance",
+                    "ar": "المدخل"
                 },
                 "switch_port": "d43",
                 "id": "lightswitch-3",
@@ -91,7 +95,8 @@
             "things": [{
                 "category": "dimmers",
                 "name": {
-                    "en": "Dimmer 2"
+                    "en": "Main",
+                    "ar": "الرئيسي"
                 },
                 "id": "dimmer-2",
                 "dimmer_port": "v2",
@@ -100,11 +105,34 @@
             }, {
                 "category": "light_switches",
                 "name": {
-                    "en": "Light switch 3"
+                    "en": "Mirror",
+                    "ar": "المرآة"
                 },
                 "switch_port": "d46",
-                "id": "lightswitch-9",
+                "id": "lightswitch-4",
                 "default_wakeup_value": 1
+            }],
+            "presets": [{
+                "dimmer-2": {
+                    "intensity": 0
+                },
+                "lightswitch-4": {
+                    "intensity": 0
+                }
+            }, {
+                "dimmer-2": {
+                    "intensity": 50
+                },
+                "lightswitch-4": {
+                    "intensity": 0
+                }
+            }, {
+                "dimmer-2": {
+                    "intensity": 100
+                },
+                "lightswitch-4": {
+                    "intensity": 1
+                }
             }]
         }]
     }, {
@@ -130,12 +158,14 @@
         }, {
             "ratio": 5,
             "name": {
-                "en": "Hotel Controls"
+                "en": "Room Service",
+                "ar": "خدمات الغرفة"
             },
             "things": [{
                 "category": "hotel_controls",
                 "name": {
-                    "en": "Hotel Controls"
+                    "en": "Room Service",
+                    "ar": "خدمات الغرفة"
                 },
                 "power_port": "d51",
                 "hotel_card": "d41",
