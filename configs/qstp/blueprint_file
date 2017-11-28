@@ -6,7 +6,7 @@
             "ratio": 5,
             "name": {
                 "en": "Room Lighting",
-                "ar": "إضائة الغرفة"
+                "ar": "إضاءة الغرفة"
             },
             "things": [{
                 "category": "dimmers",
@@ -90,7 +90,7 @@
             "ratio": 3,
             "name": {
                 "en": "Bathroom Lighting",
-                "ar": "إضائة الغرفة"
+                "ar": "إضاءة الحمام"
             },
             "things": [{
                 "category": "dimmers",
