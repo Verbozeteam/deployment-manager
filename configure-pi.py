@@ -15,6 +15,7 @@ parser.add_argument("-ip", "--piip", required=False, type=str, default="192.168.
 parser.add_argument("-u", "--user", required=False, type=str, default="pi", help="Username of the raspberry PI to SSH to")
 parser.add_argument("-p", "--password", required=False, type=str, default="notdefault", help="Password of the raspberry PI to SSH to")
 parser.add_argument("-myip", "--myip", required=False, type=str, help="IP of this machine")
+parser.add_argument("-rbt", "--reboot", required=False, action='store_true', help="Reboot the PI after the procedure")
 
 parser.add_argument("-r", "--room", required=False, type=str, help="Name of the room (JSON of the format \{\"en\": \"english name\", \"ar\": \"arabic name\"\})")
 parser.add_argument("-s", "--ssid", required=False, type=str, help="Name of the broadcasted ssid")
@@ -130,6 +131,9 @@ with open("tmp/initializer.sh", "w") as initializer_file:
         for c in extra_commands_after:
             initializer_file.write("{}\n".format(c))
     initializer_file.write("sudo rm -rf /home/pi/initializer/\n")
+
+    if cmd_args.reboot:
+        initializer_file.write("sudo reboot\n")
 
 os.system("sshpass -p {} scp -r {} {}@{}:{}".format(cmd_args.password, "tmp/*", cmd_args.user, cmd_args.piip,  "/home/pi/initializer/"))
 os.system("echo 'chmod +x /home/pi/initializer/initializer.sh && /home/pi/initializer/initializer.sh' | sshpass -p {} ssh {}@{}".format(cmd_args.password, cmd_args.user, cmd_args.piip))

@@ -13,6 +13,7 @@
                 "name": {
                     "en": "Dimmer 1"
                 },
+                "id": "dimmer-1",
                 "dimmer_port": "v1",
                 "virtual_port_data": [[1, 50, 1, 4]],
                 "default_wakeup_value": 100
@@ -22,7 +23,7 @@
                     "en": "Light switch 1"
                 },
                 "switch_port": "d44",
-                "id": "lightswitch-8",
+                "id": "lightswitch-1",
                 "default_wakeup_value": 1
             }, {
                 "category": "light_switches",
@@ -30,8 +31,56 @@
                     "en": "Light switch 2"
                 },
                 "switch_port": "d45",
-                "id": "lightswitch-7",
+                "id": "lightswitch-2",
                 "default_wakeup_value": 1
+            }, {
+                "category": "light_switches",
+                "name": {
+                    "en": "Light switch 3"
+                },
+                "switch_port": "d43",
+                "id": "lightswitch-3",
+                "default_wakeup_value": 1
+            }],
+            "presets": [{
+                "dimmer-1": {
+                    "intensity": 0
+                },
+                "lightswitch-1": {
+                    "intensity": 0
+                },
+                "lightswitch-2": {
+                    "intensity": 0
+                },
+                "lightswitch-3": {
+                    "intensity": 0
+                }
+            }, {
+                "dimmer-1": {
+                    "intensity": 50
+                },
+                "lightswitch-1": {
+                    "intensity": 0
+                },
+                "lightswitch-2": {
+                    "intensity": 1
+                },
+                "lightswitch-3": {
+                    "intensity": 1
+                }
+            }, {
+                "dimmer-1": {
+                    "intensity": 100
+                },
+                "lightswitch-1": {
+                    "intensity": 1
+                },
+                "lightswitch-2": {
+                    "intensity": 1
+                },
+                "lightswitch-3": {
+                    "intensity": 1
+                }
             }]
         }, {
             "ratio": 3,
@@ -44,6 +93,7 @@
                 "name": {
                     "en": "Dimmer 2"
                 },
+                "id": "dimmer-2",
                 "dimmer_port": "v2",
                 "virtual_port_data": [[1, 50, 1, 5]],
                 "default_wakeup_value": 100
