@@ -16,7 +16,7 @@
                 },
                 "id": "dimmer-1",
                 "dimmer_port": "v1",
-                "virtual_port_data": [[1, 50, 1, 4]],
+                "virtual_port_data": [[1, 60, 1, 4]],
                 "default_wakeup_value": 100
             }, {
                 "category": "light_switches",
@@ -100,7 +100,7 @@
                 },
                 "id": "dimmer-2",
                 "dimmer_port": "v2",
-                "virtual_port_data": [[1, 50, 1, 5]],
+                "virtual_port_data": [[1, 60, 1, 5]],
                 "default_wakeup_value": 100
             }, {
                 "category": "light_switches",
