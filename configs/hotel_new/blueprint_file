@@ -154,12 +154,13 @@
         }, {
             "ratio": 5,
             "name": {
-                "en": "Hotel Controls"
+                "en": "Room Services",
+                "ar": "خدمات الغرفة"
             },
             "things": [{
                 "category": "hotel_controls",
                 "name": {
-                    "en": "Room Service",
+                    "en": "Room Services",
                     "ar": "خدمات الغرفة"
                 },
                 "power_port": "d45",
