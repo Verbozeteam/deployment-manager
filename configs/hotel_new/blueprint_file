@@ -11,7 +11,8 @@
             "things": [{
                 "category": "dimmers",
                 "name": {
-                    "en": "Dimmer 1"
+                    "en": "Bedside",
+                    "ar": "جانب السرير"
                 },
                 "id": "dimmer-1",
                 "dimmer_port": "v1",
@@ -20,27 +21,23 @@
             }, {
                 "category": "light_switches",
                 "name": {
-                    "en": "Light switch 1"
+                    "en": "Main",
+                    "ar": "الرئيسي"
                 },
-                "switch_port": "d40",
+                "switch_port": "d27",
                 "id": "lightswitch-1",
-                "default_wakeup_value": 1
+                "default_wakeup_value": 1,
+                "on_state": 0
             }, {
                 "category": "light_switches",
                 "name": {
-                    "en": "Light switch 2"
+                    "en": "Entrance",
+                    "ar": "المدخل"
                 },
-                "switch_port": "d35",
+                "switch_port": "d29",
                 "id": "lightswitch-2",
-                "default_wakeup_value": 1
-            }, {
-                "category": "light_switches",
-                "name": {
-                    "en": "Light switch 3"
-                },
-                "switch_port": "d34",
-                "id": "lightswitch-3",
-                "default_wakeup_value": 1
+                "default_wakeup_value": 1,
+                "on_state": 0
             }],
             "presets": [{
                 "dimmer-1": {
@@ -50,9 +47,6 @@
                     "intensity": 0
                 },
                 "lightswitch-2": {
-                    "intensity": 0
-                },
-                "lightswitch-3": {
                     "intensity": 0
                 }
             }, {
@@ -64,9 +58,6 @@
                 },
                 "lightswitch-2": {
                     "intensity": 1
-                },
-                "lightswitch-3": {
-                    "intensity": 1
                 }
             }, {
                 "dimmer-1": {
@@ -76,9 +67,6 @@
                     "intensity": 1
                 },
                 "lightswitch-2": {
-                    "intensity": 1
-                },
-                "lightswitch-3": {
                     "intensity": 1
                 }
             }]
@@ -91,7 +79,8 @@
             "things": [{
                 "category": "dimmers",
                 "name": {
-                    "en": "Bathroom dimmer"
+                    "en": "Bathtub",
+                    "ar": "حوض الاستحمام"
                 },
                 "id": "dimmer-2",
                 "dimmer_port": "v2",
@@ -100,11 +89,23 @@
             }, {
                 "category": "light_switches",
                 "name": {
-                    "en": "Light switch 5"
+                    "en": "Mirror",
+                    "ar": "المرآة"
                 },
-                "switch_port": "d39",
+                "switch_port": "d25",
                 "id": "lightswitch-4",
-                "default_wakeup_value": 0
+                "default_wakeup_value": 0,
+                "on_state": 0
+            }, {
+                "category": "light_switches",
+                "name": {
+                    "en": "Master",
+                    "ar": "الرئيسي"
+                },
+                "switch_port": "d23",
+                "id": "lightswitch-5",
+                "default_wakeup_value": 0,
+                "on_state": 0
             }],
             "presets": [{
                 "dimmer-2": {
@@ -144,10 +145,11 @@
                     "ar": "التكييف"
                 },
                 "temperature_port": "v0",
-                "fan_port": "d42",
-                "digital_valve_port": "d43",
+                "fan_port": "d35",
+                "digital_valve_port": "d37",
                 "virtual_port_data": [[0, 0]],
-                "default_sleep_temperature": 25.0
+                "default_sleep_temperature": 25.0,
+                "on_state": 0
             }]
         }, {
             "ratio": 5,
@@ -162,9 +164,10 @@
                 },
                 "power_port": "d45",
                 "hotel_card": "d41",
-                "do_not_disturb_port": "d37",
-                "room_service_port": "d36",
-                "card_in_state": 0
+                "do_not_disturb_port": "d31",
+                "room_service_port": "d33",
+                "card_in_state": 0,
+                "on_state": 0
             }]
         }]
     }],

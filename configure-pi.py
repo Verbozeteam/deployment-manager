@@ -18,6 +18,7 @@ parser.add_argument("-myip", "--myip", required=False, type=str, help="IP of thi
 parser.add_argument("-rbt", "--reboot", required=False, action='store_true', help="Reboot the PI after the procedure")
 
 parser.add_argument("-r", "--room", required=False, type=str, help="Name of the room (JSON of the format \{\"en\": \"english name\", \"ar\": \"arabic name\"\})")
+parser.add_argument("-r2", "--room2", required=False, type=str, help="Name of the SECOND room (JSON of the format \{\"en\": \"english name\", \"ar\": \"arabic name\"\})")
 parser.add_argument("-s", "--ssid", required=False, type=str, help="Name of the broadcasted ssid")
 parser.add_argument("-sp", "--ssid_pw", required=False, default="notdefaultatall", type=str, help="Password of the hosted network")
 parser.add_argument("-c", "--channel", required=False, type=int, help="Network channel to use")
@@ -49,6 +50,7 @@ ARGUMENTS = {}
 if cmd_args.setup != None:
     ARGUMENTS = {
         "BLUEPRINT_NAME": cmd_args.room,
+        "BLUEPRINT_NAME_2": cmd_args.room2,
         "SSID": cmd_args.ssid,
         "CHANNEL": cmd_args.channel,
         "WPA_PASS": cmd_args.ssid_pw,
