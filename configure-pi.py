@@ -103,7 +103,7 @@ with open("tmp/initializer.sh", "w") as initializer_file:
 
     # Write the building of the aggregator to the initializer script
     if cmd_args.build_aggregator:
-        initializer_file.write("cd /home/pi/aggregator/ && make -j4 && find /home/pi/aggregator/ ! -name 'aggregator' ! -name 'log_files' -exec rm -rf {} +\n")
+        initializer_file.write("cd /home/pi/aggregator/ && make && find /home/pi/aggregator/ ! -name 'aggregator' ! -name 'log_files' -exec rm -rf {} +\n")
 
     # Write the rest of file copying to the initializer script
     if cmd_args.setup != None:
