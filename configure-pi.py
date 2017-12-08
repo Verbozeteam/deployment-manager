@@ -120,6 +120,8 @@ with open("tmp/initializer.sh", "w") as initializer_file:
 
             for kw in re.findall('\{\{(.+)\}\}', content):
                 try:
+                    if ARGUMENTS[kw] == None:
+                        raise 1
                     content = content.replace("{{" + kw + "}}", str(ARGUMENTS[kw]))
                 except Exception as e:
                     print ("missing argument for {}".format(kw))
