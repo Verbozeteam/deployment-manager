@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser(description='Configure Raspberry Pi')
 parser.add_argument("-ip", "--piip", required=False, type=str, default="192.168.10.1", help="IP of the raspberry PI to SSH to")
 parser.add_argument("-u", "--user", required=False, type=str, default="pi", help="Username of the raspberry PI to SSH to")
 parser.add_argument("-p", "--password", required=False, type=str, default="notdefault", help="Password of the raspberry PI to SSH to")
+parser.add_argument("-myu", "--myuser", required=False, type=str, default="", help="Username of this machine")
 parser.add_argument("-myip", "--myip", required=False, type=str, help="IP of this machine")
 parser.add_argument("-rbt", "--reboot", required=False, action='store_true', help="Reboot the PI after the procedure")
 
@@ -36,7 +37,9 @@ parser.add_argument("-blg", "--build_aggregator", required=False, action='store_
 
 cmd_args = parser.parse_args()
 
-my_username = os.getlogin()
+if not cmd_args.myuser:
+    cmd_args.myuser = os.getlogin()
+
 if cmd_args.myip:
     my_ip = cmd_args.myip
 else:
@@ -89,13 +92,13 @@ os.system("mkdir tmp")
 with open("tmp/initializer.sh", "w") as initializer_file:
     # Write the cloning of repos to the initializer script
     if cmd_args.clone_middleware:
-        initializer_file.write("sudo rm -rf /home/pi/middleware && git clone {}@{}:{} /home/pi/middleware\n".format(my_username, my_ip, cmd_args.clone_middleware))
+        initializer_file.write("sudo rm -rf /home/pi/middleware && git clone {}@{}:{} /home/pi/middleware\n".format(cmd_args.myuser, my_ip, cmd_args.clone_middleware))
     if cmd_args.clone_discovery:
-        initializer_file.write("sudo rm -rf /home/pi/discovery && git clone {}@{}:{} /home/pi/discovery\n".format(my_username, my_ip, cmd_args.clone_discovery))
+        initializer_file.write("sudo rm -rf /home/pi/discovery && git clone {}@{}:{} /home/pi/discovery\n".format(cmd_args.myuser, my_ip, cmd_args.clone_discovery))
     if cmd_args.clone_arduino:
-        initializer_file.write("sudo rm -rf /home/pi/arduino && git clone {}@{}:{} /home/pi/arduino\n".format(my_username, my_ip, cmd_args.clone_arduino))
+        initializer_file.write("sudo rm -rf /home/pi/arduino && git clone {}@{}:{} /home/pi/arduino\n".format(cmd_args.myuser, my_ip, cmd_args.clone_arduino))
     if cmd_args.clone_aggregator:
-        initializer_file.write("sudo rm -rf /home/pi/aggregator && git clone {}@{}:{} /home/pi/aggregator\n".format(my_username, my_ip, cmd_args.clone_aggregator))
+        initializer_file.write("sudo rm -rf /home/pi/aggregator && git clone {}@{}:{} /home/pi/aggregator\n".format(cmd_args.myuser, my_ip, cmd_args.clone_aggregator))
 
     # Write the burning of arduino to the intiializer script
     if cmd_args.download_arduino:
