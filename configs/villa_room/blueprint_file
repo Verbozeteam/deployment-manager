@@ -21,13 +21,25 @@
                     "name": {
                         "en": "Light switch 1"
                     },
-                    "switch_port": "d37"
+                    "id": "lightswitch-1",
+                    "switch_port": "d27",
+                    "on_state": 0
                 }, {
                     "category": "light_switches",
                     "name": {
                         "en": "Light switch 2"
                     },
-                    "switch_port": "d36"
+                    "id": "lightswitch-2",
+                    "switch_port": "d26",
+                    "on_state": 0
+                }, {
+                    "category": "light_switches",
+                    "name": {
+                        "en": "Light switch 3"
+                    },
+                    "id": "lightswitch-3",
+                    "switch_port": "d28",
+                    "on_state": 0
                 }]
             }, {
                 "ratio": 3,
@@ -40,35 +52,17 @@
                     "name": {
                         "english": "Curtain 1"
                     },
-                    "up_port": "d22",
-                    "down_port": "d23"
+                    "up_port": "d23",
+                    "down_port": "d22",
+                    "on_state": 0
                 }, {
                     "category": "curtains",
                     "name": {
                         "english": "Curtain 2"
                     },
-                    "up_port": "d24",
-                    "down_port": "d25"
-                }]
-            }]
-        }, {
-            "ratio": 1,
-            "panels": [{
-                "ratio": 1,
-                "name": {
-                    "en": "Air Conditioning",
-                    "ar": "التكييف"
-                },
-                "things": [{
-                    "category": "central_acs",
-                    "name": {
-                        "en": "Air conditioning",
-                        "ar": "التكييف"
-                    },
-                    "temperature_port": "v0",
-                    "fan_port": "d48",
-                    "valve_port": "d8",
-                    "virtual_port_data": [[0, 0]]
+                    "up_port": "d25",
+                    "down_port": "d24",
+                    "on_state": 0
                 }]
             }]
         }],

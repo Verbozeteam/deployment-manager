@@ -27,13 +27,33 @@
                     "name": {
                         "en": "Light switch 1"
                     },
-                    "switch_port": "d37"
+                    "id": "lightswitch-1",
+                    "switch_port": "d23",
+                    "on_state": 0
                 }, {
                     "category": "light_switches",
                     "name": {
                         "en": "Light switch 2"
                     },
-                    "switch_port": "d36"
+                    "id": "lightswitch-2",
+                    "switch_port": "d22",
+                    "on_state": 0
+                }, {
+                    "category": "light_switches",
+                    "name": {
+                        "en": "Light switch 3"
+                    },
+                    "id": "lightswitch-3",
+                    "switch_port": "d25",
+                    "on_state": 0
+                }, {
+                    "category": "light_switches",
+                    "name": {
+                        "en": "Light switch 4"
+                    },
+                    "id": "lightswitch-4",
+                    "switch_port": "d24",
+                    "on_state": 0
                 }]
             }, {
                 "ratio": 3,
@@ -46,29 +66,33 @@
                     "name": {
                         "english": "Curtain 1"
                     },
-                    "up_port": "d22",
-                    "down_port": "d23"
+                    "up_port": "d31",
+                    "down_port": "d30",
+                    "on_state": 0
                 }, {
                     "category": "curtains",
                     "name": {
                         "english": "Curtain 2"
                     },
-                    "up_port": "d24",
-                    "down_port": "d25"
+                    "up_port": "d33",
+                    "down_port": "d32",
+                    "on_state": 0
                 }, {
                     "category": "curtains",
                     "name": {
                         "english": "Curtain 3"
                     },
-                    "up_port": "d26",
-                    "down_port": "d27"
+                    "up_port": "d35",
+                    "down_port": "d34",
+                    "on_state": 0
                 }, {
                     "category": "curtains",
                     "name": {
                         "english": "Curtain 4"
                     },
-                    "up_port": "d28",
-                    "down_port": "d29"
+                    "up_port": "d37",
+                    "down_port": "d36",
+                    "on_state": 0
                 }]
             }]
         }, {
@@ -86,9 +110,10 @@
                         "ar": "التكييف"
                     },
                     "temperature_port": "v0",
-                    "fan_port": "d48",
-                    "valve_port": "d8",
-                    "virtual_port_data": [[0, 0]]
+                    "digital_valve_port": "d26",
+                    "fan_port": "d27",
+                    "virtual_port_data": [[0, 0]],
+                    "on_state": 0
                 }]
             }]
         }],
