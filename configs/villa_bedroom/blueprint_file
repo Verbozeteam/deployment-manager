@@ -34,18 +34,6 @@
                         "en": "Light switch 2"
                     },
                     "switch_port": "d36"
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Light switch 3"
-                    },
-                    "switch_port": "d35"
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Light switch 4"
-                    },
-                    "switch_port": "d34"
                 }]
             }, {
                 "ratio": 3,
@@ -67,6 +55,20 @@
                     },
                     "up_port": "d24",
                     "down_port": "d25"
+                }, {
+                    "category": "curtains",
+                    "name": {
+                        "english": "Curtain 3"
+                    },
+                    "up_port": "d26",
+                    "down_port": "d27"
+                }, {
+                    "category": "curtains",
+                    "name": {
+                        "english": "Curtain 4"
+                    },
+                    "up_port": "d28",
+                    "down_port": "d29"
                 }]
             }]
         }, {
@@ -87,25 +89,6 @@
                     "fan_port": "d48",
                     "valve_port": "d8",
                     "virtual_port_data": [[0, 0]]
-                }]
-            }, {
-                "ratio": 1,
-                "name": {
-                    "en": "Kitchen",
-                    "ar": ""
-                },
-                "things": [{
-                    "category": "kitchen_controls",
-                    "name": {
-                        "en": "Kitchen"
-                    },
-                    "menu": [{
-                        "name": "Shawerma"
-                    }, {
-                        "name": "Machboos"
-                    }, {
-                        "name": "Falafel"
-                    }]
                 }]
             }]
         }],
