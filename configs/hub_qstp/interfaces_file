@@ -34,3 +34,6 @@ allow-hotplug wlan0
 iface wlan0 inet dhcp
   wpa-ssid "QSTP INCUBATOR"
   wpa-psk "INC032017"
+
+# force those DNS servers
+dns-nameservers 8.8.8.8 8.8.4.4

@@ -2,6 +2,7 @@
     "hostapd_file": "/etc/hostapd/hostapd.conf",
     "interfaces_file": "/etc/network/interfaces",
     "init_d_file": "/etc/init.d/run_server",
+    "dhclient_file": "/etc/dhcp/dhclient.conf",
 
     "aggregator_runner_file": "/home/pi/aggregator/run_aggregator.sh",
 
