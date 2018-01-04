@@ -183,7 +183,7 @@
             "side": "right"
         },
         "layout": {
-            "margin": 5
+            "margin": 2
         }
     }, {
         "name": {{BLUEPRINT_NAME_2}},
@@ -296,7 +296,7 @@
             "side": "right"
         },
         "layout": {
-            "margin": 5
+            "margin": 2
         }
     }]
 }
