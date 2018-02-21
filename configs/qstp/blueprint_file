@@ -1,302 +1,112 @@
 {
     "id": "1",
     "rooms": [{
-        "name": {{BLUEPRINT_NAME}},
-        "grid": [{
-            "ratio": 3,
-            "panels": [{
-                "ratio": 5,
-                "name": {
-                    "en": "Room Lighting",
-                    "ar": "إضاءة الغرفة"
-                },
-                "things": [{
-                    "category": "dimmers",
-                    "name": {
-                        "en": "Bedside",
-                        "ar": "جانب السرير"
-                    },
-                    "id": "dimmer-1",
-                    "dimmer_port": "v2",
-                    "virtual_port_data": [[1, 60, 1, 4]],
-                    "default_wakeup_value": 100
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Main",
-                        "ar": "الرئيسي"
-                    },
-                    "switch_port": "d44",
-                    "id": "lightswitch-1",
-                    "default_wakeup_value": 1
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Side",
-                        "ar": "الجانبي"
-                    },
-                    "switch_port": "d45",
-                    "id": "lightswitch-2",
-                    "default_wakeup_value": 1
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Entrance",
-                        "ar": "المدخل"
-                    },
-                    "switch_port": "d43",
-                    "id": "lightswitch-3",
-                    "default_wakeup_value": 1
-                }],
-                "presets": [{
-                    "dimmer-1": {
-                        "intensity": 0
-                    },
-                    "lightswitch-1": {
-                        "intensity": 0
-                    },
-                    "lightswitch-2": {
-                        "intensity": 0
-                    },
-                    "lightswitch-3": {
-                        "intensity": 0
-                    }
-                }, {
-                    "dimmer-1": {
-                        "intensity": 50
-                    },
-                    "lightswitch-1": {
-                        "intensity": 0
-                    },
-                    "lightswitch-2": {
-                        "intensity": 1
-                    },
-                    "lightswitch-3": {
-                        "intensity": 1
-                    }
-                }, {
-                    "dimmer-1": {
-                        "intensity": 100
-                    },
-                    "lightswitch-1": {
-                        "intensity": 1
-                    },
-                    "lightswitch-2": {
-                        "intensity": 1
-                    },
-                    "lightswitch-3": {
-                        "intensity": 1
-                    }
-                }]
+        "id": "room-1",
+        "name": "QSTP Room",
+        "groups": [{
+            "id": "group-1",
+            "name": "Lights",
+            "things": [{
+                "category": "dimmers",
+                "name": "dim dim",
+                "dimmer_port": "v1",
+                "virtual_port_data": [[1, 60, 1, 4]],
+                "default_wakeup_value": 100,
+                "max_output_percentage": 50,
+                "has_switch": 1
             }, {
-                "ratio": 3,
-                "name": {
-                    "en": "Bathroom Lighting",
-                    "ar": "إضاءة الحمام"
-                },
-                "things": [{
-                    "category": "dimmers",
-                    "name": {
-                        "en": "Main",
-                        "ar": "الرئيسي"
-                    },
-                    "id": "dimmer-2",
-                    "dimmer_port": "v3",
-                    "virtual_port_data": [[1, 60, 1, 5]],
-                    "default_wakeup_value": 100
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Mirror",
-                        "ar": "المرآة"
-                    },
-                    "switch_port": "d46",
-                    "id": "lightswitch-4",
-                    "default_wakeup_value": 1
-                }],
-                "presets": [{
-                    "dimmer-2": {
-                        "intensity": 0
-                    },
-                    "lightswitch-4": {
-                        "intensity": 0
-                    }
-                }, {
-                    "dimmer-2": {
-                        "intensity": 50
-                    },
-                    "lightswitch-4": {
-                        "intensity": 0
-                    }
-                }, {
-                    "dimmer-2": {
-                        "intensity": 100
-                    },
-                    "lightswitch-4": {
-                        "intensity": 1
-                    }
-                }]
+                "category": "light_switches",
+                "name": "Light switch 1",
+                "switch_port": "d37"
+            }, {
+                "category": "light_switches",
+                "name": "Light switch 2",
+                "switch_port": "d36"
             }]
         }, {
-            "ratio": 2,
-            "panels": [{
-                "ratio": 5,
-                "name": {
-                    "en": "Air Conditioning",
-                    "ar": "التكييف"
-                },
-                "things": [{
-                    "category": "central_acs",
-                    "name": {
-                        "en": "Air Conditioning",
-                        "ar": "التكييف"
-                    },
-                    "temperature_port": "v0",
-                    "fan_port": "d50",
-                    "digital_valve_port": "d49",
-                    "virtual_port_data": [[0, 0]],
-                    "default_sleep_temperature": 25.0
-                }]
+            "id": "group-1.5",
+            "name": "Curtains",
+            "things": [{
+                "category": "curtains",
+                "name": "Curtain 1",
+                "up_port": "d22",
+                "down_port": "d23"
             }, {
-                "ratio": 5,
-                "name": {
-                    "en": "Room Service",
-                    "ar": "خدمات الغرفة"
-                },
-                "things": [{
-                    "category": "hotel_controls",
-                    "name": {
-                        "en": "Room Service",
-                        "ar": "خدمات الغرفة"
-                    },
-                    "id": "hotel-controls",
-                    "power_port": "d51",
-                    "hotel_card": "d41",
-                    "do_not_disturb_port": "d47",
-                    "room_service_port": "d48",
-                    "card_in_state": 0
-                }]
-            }]
-        }],
-        "detail": {
-            "ratio": 4,
-            "side": "right"
-        },
-        "layout": {
-            "margin": 2
-        }
-    }, {
-        "name": {{BLUEPRINT_NAME_2}},
-        "grid": [{
-            "ratio": 3,
-            "panels": [{
-                "ratio": 5,
-                "name": {
-                    "en": "Room Lighting",
-                    "ar": "إضاءة الغرفة"
-                },
-                "things": [{
-                    "category": "dimmers",
-                    "name": {
-                        "en": "Bedside",
-                        "ar": "جانب السرير"
-                    },
-                    "id": "dimmer-3",
-                    "dimmer_port": "v4",
-                    "virtual_port_data": [[1, 60, 1, 6]],
-                    "default_wakeup_value": 100
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Main",
-                        "ar": "الرئيسي"
-                    },
-                    "switch_port": "d22",
-                    "id": "lightswitch-10",
-                    "default_wakeup_value": 1
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Side",
-                        "ar": "الجانبي"
-                    },
-                    "switch_port": "d23",
-                    "id": "lightswitch-11",
-                    "default_wakeup_value": 1
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Entrance",
-                        "ar": "المدخل"
-                    },
-                    "switch_port": "d24",
-                    "id": "lightswitch-12",
-                    "default_wakeup_value": 1
-                }]
-            }, {
-                "ratio": 3,
-                "name": {
-                    "en": "Bathroom Lighting",
-                    "ar": "إضاءة الحمام"
-                },
-                "things": [{
-                    "category": "dimmers",
-                    "name": {
-                        "en": "Main",
-                        "ar": "الرئيسي"
-                    },
-                    "id": "dimmer-4",
-                    "dimmer_port": "v5",
-                    "virtual_port_data": [[1, 60, 1, 7]],
-                    "default_wakeup_value": 100
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Mirror",
-                        "ar": "المرآة"
-                    },
-                    "switch_port": "d25",
-                    "id": "lightswitch-13",
-                    "default_wakeup_value": 1
-                }]
+                "category": "curtains",
+                "name": "Curtain 2",
+                "up_port": "d24",
+                "down_port": "d25"
             }]
         }, {
-            "ratio": 2,
-            "panels": [{
-                "ratio": 5,
-                "name": {
-                    "en": "Air Conditioning",
-                    "ar": "التكييف"
-                },
-                "things": [{
-                    "category": "central_acs",
-                    "name": {
-                        "en": "Air Conditioning",
-                        "ar": "التكييف"
-                    },
-                    "temperature_port": "v1",
-                    "fan_port": "d28",
-                    "digital_valve_port": "d29",
-                    "virtual_port_data": [[0, 0]],
-                    "default_sleep_temperature": 25.0
-                }]
+            "id": "group-2",
+            "name": "Bathroom",
+            "things": [{
+                "category": "light_switches",
+                "name": "Bathroom switch 1",
+                "switch_port": "d33"
             }, {
-                "ratio": 5,
-                "name": {
-                    "en": "Room Service",
-                    "ar": "خدمات الغرفة"
-                },
-                "things": [{
-                    "id": "hotel-controls"
-                }]
+                "category": "light_switches",
+                "name": "Bathroom switch 2",
+                "switch_port": "d32"
+            }, {
+            }, {
+                "category": "light_switches",
+                "name": "Bathroom switch 3",
+                "switch_port": "d31"
+            }, {
+                "category": "dimmers",
+                "name": "Dimmer 3",
+                "dimmer_port": "v2",
+                "virtual_port_data": [[1, 60, 1, 5]],
+                "default_wakeup_value": 100,
+                "max_output_percentage": 50,
+                "has_switch": 1
             }]
-        }],
-        "detail": {
-            "ratio": 4,
-            "side": "right"
+        }, {
+            "id": "group-3",
+            "name": "Thermostat",
+            "things": [{
+                "category": "central_acs",
+                "name": "Air conditioner",
+                "temperature_port": "v0",
+                "fan_low_port": "d48",
+                "fan_medium_port": "d49",
+                "fan_high_port": "d50",
+                "valve_port": "d8",
+                "smoke_detector_port": "d22",
+                "virtual_port_data": [[0, 0]]
+            }]
+        }, {
+            "id": "group-4",
+            "name": "Room Service",
+            "things": [{
+                "category": "hotel_controls",
+                "name": "Room Service",
+                "power_port": "d42",
+                "hotel_card": "d11",
+                "room_check_button": "d10",
+                "do_not_disturb_port": "d29",
+                "room_service_port": "d28",
+                "card_in_state": 0
+            }]
+        }]
+    }],
+    "translations": {
+        "Room Lights": {
+            "en": "Room Lights",
+            "ar": "إضائة الغرفة"
         },
-        "layout": {
-            "margin": 2
+        "Bathroom Lights": {
+            "en": "Bathroom Lights",
+            "ar": "إضائة الحمام"
+        },
+        "Thermostat": {
+            "en": "Thermostat",
+            "ar": "التكييف"
+        },
+        "Room Service": {
+            "en": "Room Service",
+            "ar": "خدمات الغرفة"
         }
-    }]
+    }
 }
