@@ -7,9 +7,8 @@
     "blueprint_file": "/home/pi/middleware/blueprint.json",
     "middleware_runner_file": "/home/pi/middleware/run_server.sh",
 
-    "extra_commands_before": [
-        "cd /home/pi/middleware/ && git reset --hard && git checkout code_3"
-    ],
+    "middleware_commit": "code_3",
+
     "extra_commands_after": [
         "sudo chmod +x /etc/init.d/run_server"
     ]

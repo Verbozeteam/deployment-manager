@@ -7,9 +7,10 @@
     "blueprint_file": "/home/pi/middleware/blueprint.json",
     "middleware_runner_file": "/home/pi/middleware/run_server.sh",
 
-    "extra_commands_before": [
-        "cd /home/pi/middleware/ && git reset --hard && git checkout 06866513f69463c92d4b6d9a2aba51bc8c238d32"
-    ],
+    "middleware_commit": "06866513f69463c92d4b6d9a2aba51bc8c238d32",
+    "arduino_commit": "87d4f8af9b1eb9a3dd06e8b110c4fed20689d0b7",
+    "discovery_commit": "7d254a96e3a3eb385fab6797c4a3e85138ca6b67",
+
     "extra_commands_after": [
         "sudo chmod +x /etc/init.d/run_server"
     ]

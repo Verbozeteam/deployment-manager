@@ -32,6 +32,7 @@ parser.add_argument("-cla", "--clone_arduino", required=False, type=str, help="C
 parser.add_argument("-clm", "--clone_middleware", required=False, type=str, help="Clone middleware repository")
 parser.add_argument("-cld", "--clone_discovery", required=False, type=str, help="Clone discovery repository")
 parser.add_argument("-clg", "--clone_aggregator", required=False, type=str, help="Clone aggregator repository")
+parser.add_argument("-cldp", "--clone_demo_proxy", required=False, type=str, help="Clone demo proxy repository")
 parser.add_argument("-stp", "--setup", required=False, type=str, help="Perform file setup")
 parser.add_argument("-dla", "--download_arduino", required=False, action='store_true', help="Download Arduino software to Arduino")
 parser.add_argument("-blg", "--build_aggregator", required=False, action='store_true', help="Build the aggregator from source")
@@ -72,6 +73,20 @@ if cmd_args.setup != None:
     if "extra_commands_after" in config_json:
         del config_json["extra_commands_after"]
 
+    middleware_commit = config_json.get("middleware_commit", None)
+    if "middleware_commit" in config_json:
+        del config_json["middleware_commit"]
+    arduino_commit = config_json.get("arduino_commit", None)
+    if "arduino_commit" in config_json:
+        del config_json["arduino_commit"]
+    discovery_commit = config_json.get("discovery_commit", None)
+    if "discovery_commit" in config_json:
+        del config_json["discovery_commit"]
+    aggregator_commit = config_json.get("aggregator_commit", None)
+    if "aggregator_commit" in config_json:
+        del config_json["aggregator_commit"]
+
+
 search_dirs = [
     os.path.join("configs", cmd_args.setup if cmd_args.setup != None else ""),
     os.path.join("configs", "general"),
@@ -96,12 +111,30 @@ with open("tmp/initializer.sh", "w") as initializer_file:
     # Write the cloning of repos to the initializer script
     if cmd_args.clone_middleware:
         initializer_file.write("sudo rm -rf /home/pi/middleware && {} git clone {}@{}:{} /home/pi/middleware\n".format(sshpass, cmd_args.myuser, my_ip, cmd_args.clone_middleware))
+        try:
+            if middleware_commit:
+                initializer_file.write("cd /home/pi/middleware/ && git checkout {}\n".format(middleware_commit))
+        except: pass
     if cmd_args.clone_discovery:
         initializer_file.write("sudo rm -rf /home/pi/discovery && {} git clone {}@{}:{} /home/pi/discovery\n".format(sshpass, cmd_args.myuser, my_ip, cmd_args.clone_discovery))
+        try:
+            if discovery_commit:
+                initializer_file.write("cd /home/pi/discovery/ && git checkout {}\n".format(discovery_commit))
+        except: pass
     if cmd_args.clone_arduino:
         initializer_file.write("sudo rm -rf /home/pi/arduino && {} git clone {}@{}:{} /home/pi/arduino\n".format(sshpass, cmd_args.myuser, my_ip, cmd_args.clone_arduino))
+        try:
+            if arduino_commit:
+                initializer_file.write("cd /home/pi/arduino/ && git checkout {}\n".format(arduino_commit))
+        except: pass
     if cmd_args.clone_aggregator:
         initializer_file.write("sudo rm -rf /home/pi/aggregator && {} git clone {}@{}:{} /home/pi/aggregator\n".format(sshpass, cmd_args.myuser, my_ip, cmd_args.clone_aggregator))
+        try:
+            if aggregator_commit:
+                initializer_file.write("cd /home/pi/aggregator/ && git checkout {}\n".format(aggregator_commit))
+        except: pass
+    if cmd_args.clone_demo_proxy:
+        initializer_file.write("sudo rm -rf /home/pi/demo-middleware-proxy && {} git clone {}@{}:{} /home/pi/demo-middleware-proxy\n".format(sshpass, cmd_args.myuser, my_ip, cmd_args.clone_demo_proxy))
 
     # Write the burning of arduino to the intiializer script
     if cmd_args.download_arduino:
@@ -109,7 +142,7 @@ with open("tmp/initializer.sh", "w") as initializer_file:
 
     # Write the building of the aggregator to the initializer script
     if cmd_args.build_aggregator:
-        initializer_file.write("cd /home/pi/aggregator/ && make && find /home/pi/aggregator/ ! -name 'aggregator' ! -name 'log_files' -exec rm -rf {} +\n")
+        initializer_file.write("cd /home/pi/aggregator/ && make -j 2 && find /home/pi/aggregator/ ! -name 'aggregator' ! -name 'log_files' -exec rm -rf {} +\n")
 
     # Write the rest of file copying to the initializer script
     if cmd_args.setup != None:
@@ -127,7 +160,7 @@ with open("tmp/initializer.sh", "w") as initializer_file:
             for kw in re.findall('\{\{(.+)\}\}', content):
                 try:
                     if ARGUMENTS[kw] == None:
-                        raise 1
+                        raise Exception(1)
                     content = content.replace("{{" + kw + "}}", str(ARGUMENTS[kw]))
                 except Exception as e:
                     print ("missing argument for {}".format(kw))

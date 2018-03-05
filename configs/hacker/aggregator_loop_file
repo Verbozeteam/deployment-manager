@@ -1,0 +1,7 @@
+#!/bin/sh
+cd /home/pi/aggregator
+
+while :
+do
+    ./aggregator -w ws://0.0.0.0:7986/ 1> /dev/null 2>&1
+done

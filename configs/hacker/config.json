@@ -1,0 +1,14 @@
+{
+    "hostapd_file": "/etc/hostapd/hostapd.conf",
+    "interfaces_file": "/etc/network/interfaces",
+    "init_d_file": "/etc/init.d/run_server",
+
+    "aggregator_runner_file": "/home/pi/aggregator/run_aggregator.sh",
+    "aggregator_loop_file": "/home/pi/aggregator/run_loop.sh",
+
+    "extra_commands_after": [
+        "sudo chmod +x /etc/init.d/run_server",
+        "sudo chmod +x /home/pi/aggregator/run_aggregator.sh",
+        "sudo chmod +x /home/pi/aggregator/run_loop.sh"
+    ]
+}
