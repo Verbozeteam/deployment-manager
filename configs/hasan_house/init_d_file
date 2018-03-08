@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cd /home/pi/aggregator
+./run_aggregator.sh
+
+cd /home/pi/middleware
+./run_server.sh
+
+cd /home/pi/discovery
+./run_discovery

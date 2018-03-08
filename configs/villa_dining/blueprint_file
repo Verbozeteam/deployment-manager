@@ -23,7 +23,7 @@
                         "en": "Chandlier",
                         "ar": "الثريا"
                     },
-                    "switch_port": "d27",
+                    "switch_port": "d23",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
@@ -31,7 +31,7 @@
                         "en": "Hidden",
                         "ar": "المخفي"
                     },
-                    "switch_port": "d26",
+                    "switch_port": "d25",
                     "on_state": 0
                 }]
             }, {
@@ -56,6 +56,20 @@
                     "up_port": "d33",
                     "down_port": "d32",
                     "on_state": 0
+                }]
+            }, {
+                "ratio": 1,
+                "name": {
+                    "en": "Water fountains",
+                    "ar": "النوافير"
+                },
+                "things": [{
+                    "category": "water_fountains",
+                    "name": {
+                        "en": "Water Fountain",
+                        "ar": "نافورة"
+                    },
+                    "switch_port": "d24"
                 }]
             }]
         }],

@@ -13,45 +13,40 @@
                 "things": [{
                     "category": "dimmers",
                     "name": {
-                        "en": "Dimmer 1"
+                        "en": "Spotlight",
+                        "ar": "ضوء المسرح"
                     },
                     "dimmer_port": "d4"
                 }, {
-                    "category": "dimmers",
-                    "name": {
-                        "en": "Dimmer 2"
-                    },
-                    "dimmer_port": "d5"
-                }, {
                     "category": "light_switches",
                     "name": {
-                        "en": "Light switch 1"
+                        "en": "Chandlier 1",
+                        "ar": "الثريا 1"
                     },
-                    "id": "lightswitch-1",
                     "switch_port": "d23",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
                     "name": {
-                        "en": "Light switch 2"
+                        "en": "Chandlier 2",
+                        "ar": "الثريا 2"
                     },
-                    "id": "lightswitch-2",
                     "switch_port": "d22",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
                     "name": {
-                        "en": "Light switch 3"
+                        "en": "Hidden",
+                        "ar": "المخفي"
                     },
-                    "id": "lightswitch-3",
                     "switch_port": "d25",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
                     "name": {
-                        "en": "Light switch 4"
+                        "en": "Pool Stars",
+                        "ar": "نجوم المسبح"
                     },
-                    "id": "lightswitch-4",
                     "switch_port": "d24",
                     "on_state": 0
                 }]
@@ -59,7 +54,7 @@
                 "ratio": 3,
                 "name": {
                     "en": "Curtains",
-                    "ar": ""
+                    "ar": "الستائر"
                 },
                 "things": [{
                     "category": "curtains",
@@ -92,27 +87,6 @@
                     },
                     "up_port": "d37",
                     "down_port": "d36",
-                    "on_state": 0
-                }]
-            }]
-        }, {
-            "ratio": 1,
-            "panels": [{
-                "ratio": 1,
-                "name": {
-                    "en": "Air Conditioning",
-                    "ar": "التكييف"
-                },
-                "things": [{
-                    "category": "central_acs",
-                    "name": {
-                        "en": "Air conditioning",
-                        "ar": "التكييف"
-                    },
-                    "temperature_port": "v0",
-                    "digital_valve_port": "d26",
-                    "fan_port": "d27",
-                    "virtual_port_data": [[0, 0]],
                     "on_state": 0
                 }]
             }]

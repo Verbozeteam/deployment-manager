@@ -1,0 +1,5 @@
+#!/bin/sh
+cd /home/pi/aggregator
+
+echo "Running the aggregator..."
+./run_loop.sh &

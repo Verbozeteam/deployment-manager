@@ -1,0 +1,78 @@
+{
+    "id": "1",
+    "rooms": [{
+        "id": "room-1",
+        "name": "Hasan's Room",
+        "groups": [{
+            "id": "group-1",
+            "name": "Lights",
+            "things": [{
+                "category": "dimmers",
+                "name": "Dimmer 1",
+                "dimmer_port": "d4",
+                "max_output_percentage": 70,
+                "has_switch": 1
+            }, {
+                "category": "light_switches",
+                "name": "Light switch 1",
+                "switch_port": "d10"
+            }, {
+                "category": "light_switches",
+                "name": "Light switch 2",
+                "switch_port": "d11"
+            }, {
+                "category": "light_switches",
+                "name": "Light switch 3",
+                "switch_port": "d21"
+            }, {
+                "category": "light_switches",
+                "name": "Light switch 4",
+                "switch_port": "d22"
+            }, {
+                "category": "light_switches",
+                "name": "Light switch 5",
+                "switch_port": "d23"
+            }]
+        }]
+    }],
+    "translations": {
+        "Hasan's Room": {
+            "en": "Hasan's Room",
+            "ar": "غرفة حسن"
+        },
+        "Room Lights": {
+            "en": "Room Lights",
+            "ar": "إضائة الغرفة"
+        },
+        "Bathroom Lights": {
+            "en": "Bathroom Lights",
+            "ar": "إضائة الحمام"
+        },
+        "Thermostat": {
+            "en": "Thermostat",
+            "ar": "التكييف"
+        },
+        "Room Service": {
+            "en": "Room Service",
+            "ar": "خدمات الغرفة"
+        }
+    },
+    "remote_boards": {
+        "13a2004172fb7e": {
+            "digital_port_start_range": 0,
+            "num_digital_ports": 12,
+            "analog_port_start_range": 0,
+            "num_analog_ports": 12,
+            "virtual_port_start_range": 0,
+            "num_virtual_ports": 12
+        },
+        "13a20041514473": {
+            "digital_port_start_range": 12,
+            "num_digital_ports": 12,
+            "analog_port_start_range": 12,
+            "num_analog_ports": 12,
+            "virtual_port_start_range": 12,
+            "num_virtual_ports": 12
+        }
+    }
+}

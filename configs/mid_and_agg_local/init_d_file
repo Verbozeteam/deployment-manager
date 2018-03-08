@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cd /home/pi/aggregator
+./run_aggregator.sh
+
+cd /home/pi/demo-middleware-proxy
+/usr/local/bin/python3.6 proxy.py &
+
+cd /home/pi/middleware
+./run_server.sh
+
+cd /home/pi/discovery
+./run_discovery

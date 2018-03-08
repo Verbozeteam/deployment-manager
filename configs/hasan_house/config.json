@@ -7,9 +7,14 @@
     "blueprint_file": "/home/pi/middleware/blueprint.json",
     "middleware_runner_file": "/home/pi/middleware/run_server.sh",
 
-    "middleware_commit": "242c0687cbe22df43277a6741afe2a66ec3d06dc",
+    "aggregator_runner_file": "/home/pi/aggregator/run_aggregator.sh",
+    "aggregator_loop_file": "/home/pi/aggregator/run_loop.sh",
+
+    "middleware_commit": "code_3",
 
     "extra_commands_after": [
-        "sudo chmod +x /etc/init.d/run_server"
+        "sudo chmod +x /etc/init.d/run_server",
+        "sudo chmod +x /home/pi/aggregator/run_aggregator.sh",
+        "sudo chmod +x /home/pi/aggregator/run_loop.sh"
     ]
 }

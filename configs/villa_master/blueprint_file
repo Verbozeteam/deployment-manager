@@ -1,0 +1,129 @@
+{
+    "id": "1",
+    "rooms": [{
+        "name": {{BLUEPRINT_NAME}},
+        "grid": [{
+            "ratio": 2,
+            "panels": [{
+                "ratio": 5,
+                "name": {
+                    "en": "Room Lights",
+                    "ar": "إضائة الغرفة"
+                },
+                "things": [{
+                    "category": "dimmers",
+                    "name": {
+                        "en": "Spotlight 1",
+                        "ar": "ضوء المسرح 1"
+                    },
+                    "dimmer_port": "d4"
+                }, {
+                    "category": "dimmers",
+                    "name": {
+                        "en": "Spotlight 2",
+                        "ar": "ضوء المسرح 2"
+                    },
+                    "dimmer_port": "d5"
+                }, {
+                    "category": "light_switches",
+                    "name": {
+                        "en": "Chandlier",
+                        "ar": "الثريا"
+                    },
+                    "switch_port": "d23",
+                    "on_state": 0
+                }, {
+                    "category": "light_switches",
+                    "name": {
+                        "en": "Chandlier Bed",
+                        "ar": "ثريا السرير"
+                    },
+                    "switch_port": "d22",
+                    "on_state": 0
+                }, {
+                    "category": "light_switches",
+                    "name": {
+                        "en": "Hidden",
+                        "ar": "المخفي"
+                    },
+                    "switch_port": "d25",
+                    "on_state": 0
+                }, {
+                    "category": "light_switches",
+                    "name": {
+                        "en": "Hidden Bed",
+                        "ar": "مخفي السرير"
+                    },
+                    "switch_port": "d24",
+                    "on_state": 0
+                }]
+            }, {
+                "ratio": 3,
+                "name": {
+                    "en": "Curtains",
+                    "ar": ""
+                },
+                "things": [{
+                    "category": "curtains",
+                    "name": {
+                        "english": "Curtain 1"
+                    },
+                    "up_port": "d31",
+                    "down_port": "d30",
+                    "on_state": 0
+                }, {
+                    "category": "curtains",
+                    "name": {
+                        "english": "Curtain 2"
+                    },
+                    "up_port": "d33",
+                    "down_port": "d32",
+                    "on_state": 0
+                }, {
+                    "category": "curtains",
+                    "name": {
+                        "english": "Curtain 3"
+                    },
+                    "up_port": "d35",
+                    "down_port": "d34",
+                    "on_state": 0
+                }, {
+                    "category": "curtains",
+                    "name": {
+                        "english": "Curtain 4"
+                    },
+                    "up_port": "d37",
+                    "down_port": "d36",
+                    "on_state": 0
+                }]
+            }, {
+                "ratio": 5,
+                "name": {
+                    "en": "AC",
+                    "ar": "التكييف"
+                },
+                "things": [{
+                    "category": "central_acs",
+                    "name": {
+                        "en": "AC",
+                        "ar": "التكييف"
+                    },
+                    "temperature_port": "v0",
+                    "fan_low_port": "d27",
+                    "fan_medium_port": "d28",
+                    "fan_high_port": "d29",
+                    "digital_valve_port": "d26",
+                    "virtual_port_data": [[0, 0]],
+                    "on_state": 0
+                }]
+            }]
+        }],
+        "detail": {
+            "ratio": 4,
+            "side": "right"
+        },
+        "layout": {
+            "margin": 5
+        }
+    }]
+}
