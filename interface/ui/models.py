@@ -35,7 +35,22 @@ class DeploymentConfig(models.Model):
     version = models.IntegerField()
 
     def can_be_changed(self):
-        return self.pk is None or not Deployment.objects.filter(pk=self.pk).exists()
+        if not self.pk:
+            return True # new deployment config - no problem
+
+        if Deployment.objects.filter(config=self.pk).exists():
+            return False # Deployment configuration is deployed somewhere
+
+        # make sure to child deployment config has been deployed either
+        children = list(DeploymentConfig.objects.filter(parent=self))
+        while len(children) > 0:
+            c = children[0]
+            children = children[1:]
+            if Deployment.objects.filter(config=c.pk).exists():
+                return False # Child deployment configuration is deployed somewhere
+            children += list(DeploymentConfig.objects.filter(parent=c)) # get grandchildren
+
+        return True
 
     def save(self, *args, **kwargs):
         if not self.can_be_changed():

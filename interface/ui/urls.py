@@ -13,9 +13,21 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.urls import path, include
+from rest_framework import routers
 from ui import views
+
+router = routers.DefaultRouter()
+router.register(r'repository', views.RepositoryViewSet)
+router.register(r'repository_build_option', views.RepositoryBuildOptionViewSet)
+router.register(r'deployment_config', views.DeploymentConfigViewSet)
+router.register(r'deployment_file', views.DeploymentFileViewSet)
+router.register(r'deployment_repository', views.DeploymentRepositoryViewSet)
+router.register(r'deployment', views.DeploymentViewSet)
+router.register(r'deployment_parameter', views.DeploymentParameterViewSet)
 
 urlpatterns = [
     path('', views.home_view, name='home'),
+    url(r'^', include(router.urls)),
 ]
