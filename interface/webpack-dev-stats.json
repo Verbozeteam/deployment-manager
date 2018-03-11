@@ -1,0 +1,1 @@
+{"status":"done","chunks":{"main":[{"name":"bundle.js","path":"/home/pi/deployment-manager/interface/frontend/bundles/bundle.js"}]},"error":"ModuleNotFoundError","message":"Module not found: Error: Can't resolve './App' in '/home/pi/deployment-manager/interface/frontend'"}

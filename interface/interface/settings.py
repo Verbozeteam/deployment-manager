@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'webpack_loader',
     'ui',
 ]
 
@@ -101,6 +102,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+WEBPACK_LOADER = {
+    'DEFAULT': {
+            'BUNDLE_DIR_NAME': '/bundles/',
+            'STATS_FILE': os.path.join(BASE_DIR, 'webpack-dev-stats.json'),
+        }
+}
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'frontend'),
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/

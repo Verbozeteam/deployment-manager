@@ -1,99 +1,14 @@
-{% load staticfiles %}
-
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Deployment Manager</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'ui/css/bootstrap.min.css' %}" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="{% static 'ui/css/home.css' %}" rel="stylesheet">
-</head>
-
-<body>
-    <main role="main">
-
-        <section class="jumbotron">
-            <div class="row">
-                <div class="col-md-2" style="background-color: #dddddd">
-
-                </div>
-                <div class="col-md-10">
-
-                </div>
-            </div>
-        </section>
-
-        <div class="py-5 bg-light">
-            <div class="container">
-                <div class="row">
-
-                    <div class="col-md-4">
-                        <div class="card mb-4 box-shadow">
-                            <img class="card-img-top"
-                                style="height: 225px; width: 100%; display: block;" src=""
-                                data-holder-rendered="true">
-                            <div class="card-body">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content.
-                                    This content is a little bit longer.</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                    </div>
-                                    <small class="text-muted">9 mins</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="card mb-4 box-shadow">
-                            <img class="card-img-top"
-                                style="height: 225px; width: 100%; display: block;" src=""
-                                data-holder-rendered="true">
-                            <div class="card-body">
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content.
-                                    This content is a little bit longer.</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                    </div>
-                                    <small class="text-muted">9 mins</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <footer class="text-muted">
-        <div class="container">
-            <p class="float-right">
-                VERBOZE
-            </p>
-
-            GET REKT
-        </div>
-    </footer>
-
-    <!-- Bootstrap/jquery JavaScript -->
-    <script src="{% static 'ui/js/jquery-3.3.1.min.js' %}"></script>
-    <script src="{% static 'ui/js/bootstrap.min.js' %}"></script>
-
-    <script src="{% static 'ui/js/main.js' %}"></script>
-</body>
-
+{% load render_bundle from webpack_loader %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Ponynote</title>
+  </head>
+  <body>
+    <div id="root">
+    </div>
+      {% render_bundle 'main' %}
+  </body>
 </html>
