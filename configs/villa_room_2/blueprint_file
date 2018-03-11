@@ -45,31 +45,33 @@
                     "name": {
                         "english": "Curtain 1"
                     },
-                    "up_port": "d25",
-                    "down_port": "d26",
+                    "up_port": "d24",
+                    "down_port": "d25",
                     "on_state": 0
                 }, {
                     "category": "curtains",
                     "name": {
                         "english": "Curtain 2"
                     },
-                    "up_port": "d27",
-                    "down_port": "d28",
+                    "up_port": "d26",
+                    "down_port": "d27",
                     "on_state": 0
-                }]
-            }, {
-                "ratio": 1,
-                "name": {
-                    "en": "Water fountains",
-                    "ar": "النوافير"
-                },
-                "things": [{
-                    "category": "water_fountains",
+                }, {
+                    "category": "curtains",
                     "name": {
-                        "en": "Water Fountain",
-                        "ar": "نافورة"
+                        "english": "Curtain 3"
                     },
-                    "switch_port": "d24"
+                    "up_port": "d28",
+                    "down_port": "d29",
+                    "on_state": 0
+                }, {
+                    "category": "curtains",
+                    "name": {
+                        "english": "Curtain 4"
+                    },
+                    "up_port": "d30",
+                    "down_port": "d31",
+                    "on_state": 0
                 }]
             }]
         }],
