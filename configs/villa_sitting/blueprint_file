@@ -23,7 +23,7 @@
                         "en": "Chandlier 1",
                         "ar": "الثريا 1"
                     },
-                    "switch_port": "d23",
+                    "switch_port": "d22",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
@@ -31,7 +31,7 @@
                         "en": "Chandlier 2",
                         "ar": "الثريا 2"
                     },
-                    "switch_port": "d22",
+                    "switch_port": "d23",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
@@ -39,7 +39,7 @@
                         "en": "Hidden",
                         "ar": "المخفي"
                     },
-                    "switch_port": "d25",
+                    "switch_port": "d24",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
@@ -47,7 +47,22 @@
                         "en": "Pool Stars",
                         "ar": "نجوم المسبح"
                     },
-                    "switch_port": "d24",
+                    "switch_port": "d25",
+                    "on_state": 0
+                }]
+            }, {
+                "ratio": 5,
+                "name": {
+                    "en": "Balcony Lights",
+                    "ar": "البلكونة"
+                },
+                "things": [{
+                    "category": "light_switches",
+                    "name": {
+                        "en": "Balcony",
+                        "ar": "البلكونة"
+                    },
+                    "switch_port": "d34",
                     "on_state": 0
                 }]
             }, {
@@ -61,32 +76,32 @@
                     "name": {
                         "english": "Curtain 1"
                     },
-                    "up_port": "d31",
-                    "down_port": "d30",
+                    "up_port": "d26",
+                    "down_port": "d27",
                     "on_state": 0
                 }, {
                     "category": "curtains",
                     "name": {
                         "english": "Curtain 2"
                     },
-                    "up_port": "d33",
-                    "down_port": "d32",
+                    "up_port": "d28",
+                    "down_port": "d29",
                     "on_state": 0
                 }, {
                     "category": "curtains",
                     "name": {
                         "english": "Curtain 3"
                     },
-                    "up_port": "d35",
-                    "down_port": "d34",
+                    "up_port": "d30",
+                    "down_port": "d31",
                     "on_state": 0
                 }, {
                     "category": "curtains",
                     "name": {
                         "english": "Curtain 4"
                     },
-                    "up_port": "d37",
-                    "down_port": "d36",
+                    "up_port": "d32",
+                    "down_port": "d33",
                     "on_state": 0
                 }]
             }]

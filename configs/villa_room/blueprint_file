@@ -23,7 +23,7 @@
                         "en": "Chandlier",
                         "ar": "الثريا"
                     },
-                    "switch_port": "d27",
+                    "switch_port": "d22",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
@@ -31,7 +31,7 @@
                         "en": "Hidden",
                         "ar": "المخفي"
                     },
-                    "switch_port": "d26",
+                    "switch_port": "d23",
                     "on_state": 0
                 }]
             }, {
@@ -45,16 +45,16 @@
                     "name": {
                         "english": "Curtain 1"
                     },
-                    "up_port": "d31",
-                    "down_port": "d30",
+                    "up_port": "d24",
+                    "down_port": "d25",
                     "on_state": 0
                 }, {
                     "category": "curtains",
                     "name": {
                         "english": "Curtain 2"
                     },
-                    "up_port": "d33",
-                    "down_port": "d32",
+                    "up_port": "d26",
+                    "down_port": "d27",
                     "on_state": 0
                 }]
             }]
