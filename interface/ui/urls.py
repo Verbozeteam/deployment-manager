@@ -19,12 +19,14 @@ from rest_framework import routers
 from ui import views
 
 router = routers.DefaultRouter()
+router.register(r'firmware', views.FirmwareViewSet)
 router.register(r'repository', views.RepositoryViewSet)
 router.register(r'repository_build_option', views.RepositoryBuildOptionViewSet)
 router.register(r'deployment_config', views.DeploymentConfigViewSet)
 router.register(r'deployment_file', views.DeploymentFileViewSet)
+router.register(r'file_default_parameter', views.FileDefaultParameterViewSet)
 router.register(r'deployment_repository', views.DeploymentRepositoryViewSet)
-router.register(r'deployment', views.DeploymentViewSet)
+router.register(r'deployment', views.DeploymentViewSet, base_name='deployment')
 router.register(r'deployment_parameter', views.DeploymentParameterViewSet)
 
 urlpatterns = [

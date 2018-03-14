@@ -1,6 +1,11 @@
 from ui.models import *
 from rest_framework import serializers
 
+class FirmwareSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Firmware
+        fields = '__all__'
+
 class RepositorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Repository
@@ -19,6 +24,11 @@ class DeploymentConfigSerializer(serializers.ModelSerializer):
 class DeploymentFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeploymentFile
+        fields = '__all__'
+
+class FileDefaultParameterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileDefaultParameter
         fields = '__all__'
 
 class DeploymentRepositorySerializer(serializers.ModelSerializer):

@@ -1,12 +1,13 @@
+{% load staticfiles %}
 {% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Ponynote</title>
+    <title>Deployment Editor</title>
   </head>
-  <body>
+  <body style="background-image: url({% static '/ui/images/pattern.png' %}); background-repeat: repeat; margin: 0;">
     <div id="root">
     </div>
       {% render_bundle 'main' %}

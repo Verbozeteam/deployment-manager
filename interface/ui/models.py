@@ -1,11 +1,20 @@
 from django.db import models
 
+class Firmware(models.Model):
+    """
+        Represents an existing .img file to be dd'd on an SD card
+    """
+    local_path = models.CharField(max_length=256, unique=True)
+
+    def __str__(self):
+        return self.local_path
+
 class Repository(models.Model):
     """
         Represents a repository that can be used in a deployment
     """
-    remote_path = models.CharField(max_length=2048)
-    local_path = models.CharField(max_length=256)
+    remote_path = models.CharField(max_length=2048, unique=True)
+    local_path = models.CharField(max_length=256, unique=True)
 
     def __str__(self):
         return self.remote_path
@@ -32,7 +41,7 @@ class DeploymentConfig(models.Model):
     """
     parent = models.ForeignKey('DeploymentConfig', on_delete=models.CASCADE, blank=True, null=True, default=None)
     name = models.CharField(max_length=256)
-    version = models.IntegerField()
+    version = models.IntegerField(default=1)
 
     def can_be_changed(self):
         if not self.pk:
@@ -64,6 +73,9 @@ class DeploymentFile(models.Model):
     """
         Represents a file that is to be cp'd (forced) onto the deployed image
     """
+    class Meta:
+        unique_together = ('deployment', 'target_filename')
+
     deployment = models.ForeignKey(DeploymentConfig, on_delete=models.CASCADE)
     target_filename = models.CharField(max_length=256)
     file_contents = models.TextField(default="", blank=True)
@@ -77,10 +89,28 @@ class DeploymentFile(models.Model):
     def __str__(self):
         return "[{}] {}".format(self.deployment, self.target_filename)
 
+class FileDefaultParameter(models.Model):
+    """
+        A default parameter to use when a file is deployed
+    """
+    class Meta:
+        unique_together = ('file', 'parameter_name')
+
+    file = models.ForeignKey(DeploymentFile, on_delete=models.CASCADE)
+    is_required = models.BooleanField()
+    parameter_name = models.CharField(max_length=64)
+    parameter_value = models.CharField(max_length=512, blank=True)
+
+    def __str__(self):
+        return "[{}] {}:{} ({})".format(self.file, self.parameter_name, self.parameter_value, "required" if self.is_required else "not required")
+
 class DeploymentRepository(models.Model):
     """
         A repository to be cloned on deployment
     """
+    class Meta:
+        unique_together = ('deployment', 'repo')
+
     deployment = models.ForeignKey(DeploymentConfig, on_delete=models.CASCADE)
     repo = models.ForeignKey(Repository, on_delete=models.CASCADE)
     commit = models.CharField(max_length=256, default='master')
@@ -99,6 +129,8 @@ class Deployment(models.Model):
     """
     config = models.ForeignKey(DeploymentConfig, on_delete=models.PROTECT)
     date = models.DateTimeField(auto_now_add=True)
+    target = models.CharField(max_length=256)
+    comment = models.TextField()
 
     def __str__(self):
         return "[{}] {}".format(self.date, self.config)
