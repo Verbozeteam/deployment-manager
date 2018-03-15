@@ -19,6 +19,7 @@ from rest_framework import routers
 from ui import views
 
 router = routers.DefaultRouter()
+router.register(r'running_deployment', views.RunningDeploymentViewSet)
 router.register(r'firmware', views.FirmwareViewSet)
 router.register(r'repository', views.RepositoryViewSet)
 router.register(r'repository_build_option', views.RepositoryBuildOptionViewSet)

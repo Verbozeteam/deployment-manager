@@ -3,10 +3,13 @@ import axios from 'axios';
 class DataManagerImpl {
 
     _listeners = {};
+    _reloadTimout = undefined;
 
     serverData = {
+        deploymentLocks: [],
         firmwares: [],
         repositories: [],
+        repositoryBuildOptions: [],
         deploymentConfigs: [],
         deploymentFiles: [],
         fileDefaultParams: [],
@@ -32,8 +35,10 @@ class DataManagerImpl {
 
     load() {
         var promises = [
+            this.fetchData('/ui/running_deployment/', d => this.serverData.deploymentLocks = d),
             this.fetchData('/ui/firmware/', d => this.serverData.firmwares = d),
             this.fetchData('/ui/repository/', d => this.serverData.repositories = d),
+            this.fetchData('/ui/repository_build_option/', d => this.serverData.repositoryBuildOptions = d),
             this.fetchData('/ui/deployment_config/', d => this.serverData.deploymentConfigs = d),
             this.fetchData('/ui/deployment_file/', d => this.serverData.deploymentFiles = d),
             this.fetchData('/ui/file_default_parameter/', d => this.serverData.fileDefaultParams = d),
@@ -43,6 +48,8 @@ class DataManagerImpl {
         ];
         Promise.all(promises).then((results => {
             Object.values(this._listeners).map(l => l()); // call all listeners
+            if (this.serverData.deploymentLocks.length > 0)
+                this._reloadTimout = setTimeout(this.load.bind(this), 5000);
         }).bind(this));
     }
 
@@ -88,6 +95,10 @@ class DataManagerImpl {
 
     getDeploymentById(id) {
         return this.serverData.deployments.filter(dep => dep.id == id)[0];
+    }
+
+    getRepositoryBuildOptions(repoId) {
+        return this.serverData.repositoryBuildOptions.filter(rbo => rbo.repo == repoId);
     }
 
     getConfigRepositories(config, traceInheritance=false) {
@@ -234,14 +245,20 @@ class DataManagerImpl {
         this._apiCall('DELETE', '/ui/deployment_repository/'+repo.id+'/');
     }
 
-    deploy(config, firmwareId, target, comment, params) {
+    deploy(config, firmwareId, target, comment, params, optionIds) {
         this._apiCall('POST', '/ui/deployment/deploy/', {
             config: config.id,
             firmwareId,
             target,
             comment,
             params,
+            optionIds,
         });
+    }
+
+    deleteLock(lock) {
+        clearTimeout(this._reloadTimout);
+        this._apiCall('DELETE', '/ui/running_deployment/'+lock.id+'/');
     }
 };
 

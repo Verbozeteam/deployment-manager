@@ -9,6 +9,8 @@ from rest_framework import status
 from django.shortcuts import render, HttpResponse
 from django.db import transaction
 
+import threading
+
 
 def home_view(req):
     return render(req, 'ui/home.html', {})
@@ -66,12 +68,21 @@ class DeploymentViewSet(viewsets.ModelViewSet):
         data = request.data
         try:
             with transaction.atomic():
+                try:
+                    firmware = Firmware.objects.get(pk=data["firmwareId"])
+                except:
+                    firmware = None
                 config = DeploymentConfig.objects.get(pk=data["config"])
                 dep = Deployment.objects.create(config=config, target=data["target"], comment=data["comment"])
                 params = []
                 for p in data["params"]:
                     params.append(DeploymentParameter.objects.create(deployment=dep, parameter_name=p["parameter_name"], parameter_value=p["parameter_value"]))
-                DEPLOY(config, dep, params)
+                options = []
+                for oid in data["optionIds"]:
+                    options.append(RepositoryBuildOption.objects.get(pk=oid))
+
+                deployment_lock = RunningDeployment.objects.create(deployment=dep)
+                DeploymentThread(deployment_lock, firmware, config, dep, params, options).start()
         except Exception as e:
             return Response(data={'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
@@ -82,5 +93,68 @@ class DeploymentParameterViewSet(viewsets.ModelViewSet):
     queryset = DeploymentParameter.objects.all()
     serializer_class = DeploymentParameterSerializer
 
-def DEPLOY(config, dep, params):
-    raise Exception("a7a")
+class RunningDeploymentViewSet(viewsets.ModelViewSet):
+    authentication_classes = ()
+    permission_classes = ()
+    queryset = RunningDeployment.objects.all()
+    serializer_class = RunningDeploymentSerializer
+
+class DeploymentThread(threading.Thread):
+    def __init__(self, deployment_lock, firmware, config, dep, params, options):
+        threading.Thread.__init__(self)
+        self.firmware = firmware
+        self.deployment_lock = deployment_lock
+        self.config = config
+        self.deployment = dep
+        self.parameters = params
+        self.build_options = options
+        self.repositories = self.find_all_repositories(base=self.config)
+        self.files = self.find_all_files(base=self.config)
+
+    def find_all_repositories(self, base=None):
+        if base == None:
+            return []
+        repos = list(DeploymentRepository.objects.filter(deployment=base))
+        my_repos = dict(map(lambda r: (r.repo, r), repos))
+        parentRepos = self.find_all_repositories(base=base.parent)
+        for r in parentRepos:
+            if r.repo not in my_repos:
+                repos.append(r)
+        return repos
+
+    def find_all_files(self, base=None):
+        if base == None:
+            return []
+        files = list(DeploymentFile.objects.filter(deployment=base))
+        my_files = dict(map(lambda f: (f.target_filename, f), files))
+        parentFiles = self.find_all_files(base=base.parent)
+        for f in parentFiles:
+            if f.target_filename not in my_files:
+                files.append(f)
+        return files
+
+    def run(self):
+        try:
+            self.deploy()
+        except Exception as e:
+            print (e)
+            self.deployment_lock.status = str(e)
+            self.deployment_lock.save()
+            self.deployment.delete()
+        finally:
+            if self.deployment_lock.status == "":
+                self.deployment_lock.delete()
+
+    def deploy(self):
+        self.setup_image()
+        self.clone_repositories()
+        self.copy_files()
+
+    def setup_image(self):
+        pass
+
+    def clone_repositories(self):
+        pass
+
+    def copy_files(self):
+        pass

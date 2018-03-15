@@ -145,3 +145,11 @@ class DeploymentParameter(models.Model):
 
     def __str__(self):
         return "[{}] {}:{}".format(self.deployment, self.parameter_name, self.parameter_value)
+
+class RunningDeployment(models.Model):
+    """
+        A deployment currently happening
+    """
+
+    deployment = models.ForeignKey(Deployment, on_delete=models.SET_NULL, null=True)
+    status = models.TextField(default="", blank="")

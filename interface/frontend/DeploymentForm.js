@@ -9,6 +9,7 @@ export default class DeploymentForm extends React.Component {
         target: "",
         comment: "",
         params: [],
+        options: {},
     };
 
     resetState(config) {
@@ -17,12 +18,21 @@ export default class DeploymentForm extends React.Component {
         for (var i = 0; i < _params.length; i++)
             params = params.concat(_params[i]);
 
+        var repositories = DataManager.getConfigRepositories(config, true);
+        var buildOptions = [];
+        for (var i = 0; i < repositories.length; i++)
+            buildOptions = buildOptions.concat(DataManager.getRepositoryBuildOptions(repositories[i].id));
+        var boDict = {};
+        for (var i = 0; i < buildOptions.length; i++)
+            boDict[buildOptions[i].option_name] = {...buildOptions[i], isChecked: false};
+
         this.setState({
             burnFirmware: false,
             firmware: DataManager.getAllFirmwares()[0].id,
             target: "",
             comment: "",
             params: params,
+            options: boDict,
         })
     }
 
@@ -36,7 +46,7 @@ export default class DeploymentForm extends React.Component {
 
     deploy() {
         const { config } = this.props;
-        const { firmware, target, comment, params, burnFirmware } = this.state;
+        const { firmware, target, comment, params, burnFirmware, options } = this.state;
 
         if (target.trim() == "") {
             console.log("Missing 'target'");
@@ -50,12 +60,13 @@ export default class DeploymentForm extends React.Component {
             }
         }
 
-        DataManager.deploy(config, burnFirmware ? firmware : -1, target, comment, params);
+        var optionIds = Object.keys(options).map(o => options[o].id);
+        DataManager.deploy(config, burnFirmware ? firmware : -1, target, comment, params, optionIds);
     }
 
     render() {
         const { config } = this.props;
-        const { firmware, target, comment, params, burnFirmware } = this.state;
+        const { firmware, target, comment, params, burnFirmware, options } = this.state;
 
         var firmwareList = DataManager.getAllFirmwares().map(f => <option key={'opf-'+f.id} value={f.id}>{f.local_path}</option>);
 
@@ -76,6 +87,16 @@ export default class DeploymentForm extends React.Component {
                     <div style={styles.fieldName}>Comment</div>
                     <textarea style={styles.fieldValue} value={comment} onChange={e => this.setState({comment: e.target.value})} rows={4} />
                 </div>
+                <div style={styles.row}>
+                    <div style={styles.fieldName}>Build options:</div>
+                    <div style={styles.fieldValue}></div>
+                </div>
+                {Object.keys(options).map(option_name =>
+                    <div key={'bo-'+option_name} style={styles.row}>
+                        <div style={styles.fieldName}>{option_name}</div>
+                        <input style={styles.fieldValue} type={"checkbox"} checked={options[option_name].isChecked} onChange={e => this.setState({options: {...options, [option_name]: {...options[option_name], isChecked: e.target.checked}}})} />
+                    </div>
+                )}
                 <div style={styles.row}>
                     <div style={styles.fieldName}>Parameters:</div>
                     <div style={styles.fieldValue}></div>
