@@ -9,7 +9,7 @@ from rest_framework import status
 from django.shortcuts import render, HttpResponse
 from django.db import transaction
 
-import threading
+import threading, os, re
 
 
 def home_view(req):
@@ -111,6 +111,10 @@ class DeploymentThread(threading.Thread):
         self.repositories = self.find_all_repositories(base=self.config)
         self.files = self.find_all_files(base=self.config)
 
+        self.command_queue = []
+        self.disk_path = "/dev/sdb2"
+        self.mounting_point = "/home/pi/mnt/"
+
     def find_all_repositories(self, base=None):
         if base == None:
             return []
@@ -150,11 +154,45 @@ class DeploymentThread(threading.Thread):
         self.clone_repositories()
         self.copy_files()
 
+        for cmd in self.command_queue:
+            if type(cmd) == type(""):
+                result = os.system(cmd)
+            else:
+                with open(cmd[0], "w") as F:
+                    F.write(cmd[1])
+                result = 0
+            if result != 0:
+                print (cmd, "===>", result)
+
+    def queue_command(self, cmd):
+        self.command_queue.append(cmd)
+
     def setup_image(self):
-        pass
+        self.queue_command("sudo umount {}".format(self.mounting_point))
+        self.queue_command("sudo rm -rf {}".format(self.mounting_point))
+        self.queue_command("sudo mkdir {}".format(self.mounting_point))
+        self.queue_command("sudo mount {} {}".format(self.disk_path, self.mounting_point))
 
     def clone_repositories(self):
-        pass
+        for repo in self.repositories:
+            local_path = os.path.join(self.mounting_point, repo.local_path)
+            self.queue_command("sudo rm -rf {}".format(local_path))
+            self.queue_command("git clone {} {}".format(repo.remote_path, local_path))
+            self.queue_command("cd {} && git checkout {}".format(local_path, repo.checkout))
+            for op in sorted(list(filter(lambda op: op.repo.id == repo.id, self.build_options)), key=lambda op: op.priority):
+                self.queue_command("cd {} && {}".format(local_path, op.option_command))
 
     def copy_files(self):
-        pass
+        ARGUMENTS = {}
+        for param in self.parameters:
+            ARGUMENTS[param.parameter_name] = param.parameter_value
+        for file in self.files:
+            local_path = os.path.join(self.mounting_point, file.target_filename)
+
+            content = file.file_contents
+            for kw in re.findall('\{\{(.+)\}\}', content):
+                content = content.replace("{{" + kw + "}}", str(ARGUMENTS[kw]))
+            self.queue_command((local_path, content))
+            if file.is_executable:
+                self.queue_command("chmod +x {}".format(local_path))
+
