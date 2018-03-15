@@ -112,7 +112,7 @@ class DeploymentThread(threading.Thread):
         self.files = self.find_all_files(base=self.config)
 
         self.command_queue = []
-        self.disk_path = "/dev/sdb2"
+        self.disk_path = "/dev/sda2"
         self.mounting_point = "/home/pi/mnt/"
 
     def find_all_repositories(self, base=None):
@@ -162,24 +162,24 @@ class DeploymentThread(threading.Thread):
                     F.write(cmd[1])
                 result = 0
             if result != 0:
-                print (cmd, "===>", result)
+                raise Exception("{} ==> {}".format(cmd, result))
 
     def queue_command(self, cmd):
         self.command_queue.append(cmd)
 
     def setup_image(self):
-        self.queue_command("sudo umount {}".format(self.mounting_point))
-        self.queue_command("sudo rm -rf {}".format(self.mounting_point))
-        self.queue_command("sudo mkdir {}".format(self.mounting_point))
-        self.queue_command("sudo mount {} {}".format(self.disk_path, self.mounting_point))
+        self.queue_command("umount {}".format(self.mounting_point))
+        self.queue_command("rm -rf {}".format(self.mounting_point))
+        self.queue_command("mkdir {}".format(self.mounting_point))
+        self.queue_command("mount {} {}".format(self.disk_path, self.mounting_point))
 
     def clone_repositories(self):
         for repo in self.repositories:
             local_path = os.path.join(self.mounting_point, repo.repo.local_path)
-            self.queue_command("sudo rm -rf {}".format(local_path))
+            self.queue_command("rm -rf {}".format(local_path))
             self.queue_command("git clone {} {}".format(repo.repo.remote_path, local_path))
-            self.queue_command("cd {} && git checkout {}".format(local_path, repo.checkout))
-            for op in sorted(list(filter(lambda op: op.repo.id == repo.id, self.build_options)), key=lambda op: op.priority):
+            self.queue_command("cd {} && git checkout {}".format(local_path, repo.commit))
+            for op in sorted(list(filter(lambda op: op.repo.id == repo.id, self.build_options)), key=lambda op: op.option_priority):
                 self.queue_command("cd {} && {}".format(local_path, op.option_command))
 
     def copy_files(self):
