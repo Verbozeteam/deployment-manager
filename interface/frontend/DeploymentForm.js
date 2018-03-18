@@ -60,7 +60,7 @@ export default class DeploymentForm extends React.Component {
             }
         }
 
-        var optionIds = Object.keys(options).map(o => options[o].id);
+        var optionIds = Object.keys(options).filter(o => o.isChecked).map(o => options[o].id);
         DataManager.deploy(config, burnFirmware ? firmware : -1, target, comment, params, optionIds);
     }
 
