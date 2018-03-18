@@ -175,7 +175,9 @@ class DeploymentThread(threading.Thread):
 
     def clone_repositories(self):
         for repo in self.repositories:
-            local_path = os.path.join(self.mounting_point, repo.repo.local_path)
+            repo_local_path = repo.repo.local_path
+            if len(repo_local_path) > 0 and repo_local_path[0] == '/': repo_local_path = repo_local_path[1:]
+            local_path = os.path.join(self.mounting_point, repo_local_path)
             self.queue_command("rm -rf {}".format(local_path))
             self.queue_command("cd {} && git clone {}".format(local_path, repo.repo.remote_path))
             self.queue_command("cd {} && git checkout {}".format(local_path, repo.commit))
@@ -187,7 +189,9 @@ class DeploymentThread(threading.Thread):
         for param in self.parameters:
             ARGUMENTS[param.parameter_name] = param.parameter_value
         for file in self.files:
-            local_path = os.path.join(self.mounting_point, file.target_filename)
+            target_filename = file.target_filename
+            if len(target_filename) > 0 and target_filename[0] == '/': target_filename = target_filename[1:]
+            local_path = os.path.join(self.mounting_point, target_filename)
 
             content = file.file_contents
             for kw in re.findall('\{\{(.+)\}\}', content):
