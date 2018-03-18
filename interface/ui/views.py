@@ -10,7 +10,6 @@ from django.shortcuts import render, HttpResponse
 from django.db import transaction
 
 import threading, os, re
-from multiprocessing import Pool
 
 
 def home_view(req):
@@ -155,8 +154,15 @@ class DeploymentThread(threading.Thread):
         self.clone_repositories()
         self.copy_files()
 
-        p = Pool(1)
-        p.map(run_commands_process, [self.command_queue])
+        for cmd in self.command_queue:
+            if type(cmd) == type(""):
+                result = os.system(cmd)
+            else:
+                with open(cmd[0], "w") as F:
+                    F.write(cmd[1])
+                result = 0
+            if result != 0:
+                raise Exception("{} ==> {}".format(cmd, result))
 
     def queue_command(self, cmd):
         self.command_queue.append(cmd)
@@ -173,7 +179,7 @@ class DeploymentThread(threading.Thread):
             if len(repo_local_path) > 0 and repo_local_path[0] == '/': repo_local_path = repo_local_path[1:]
             local_path = os.path.join(self.mounting_point, repo_local_path)
             self.queue_command("rm -rf {}".format(local_path))
-            self.queue_command("git clone {} {}".format(repo.repo.remote_path, local_path))
+            self.queue_command("eval \"$(ssh-agent -s)\" && ssh-add /home/pi/.ssh/id_rsa && git clone {} {}".format(repo.repo.remote_path, local_path))
             self.queue_command("cd {} && git checkout {}".format(local_path, repo.commit))
             for op in sorted(list(filter(lambda op: op.repo.id == repo.id, self.build_options)), key=lambda op: op.option_priority):
                 self.queue_command("cd {} && {}".format(local_path, op.option_command))
@@ -193,15 +199,4 @@ class DeploymentThread(threading.Thread):
             self.queue_command((local_path, content))
             if file.is_executable:
                 self.queue_command("chmod +x {}".format(local_path))
-
-def run_commands_process(commands):
-    for cmd in commands:
-        if type(cmd) == type(""):
-            result = os.system(cmd)
-        else:
-            with open(cmd[0], "w") as F:
-                F.write(cmd[1])
-            result = 0
-        if result != 0:
-            raise Exception("{} ==> {}".format(cmd, result))
 
