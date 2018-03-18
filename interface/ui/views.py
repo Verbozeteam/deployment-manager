@@ -10,6 +10,7 @@ from django.shortcuts import render, HttpResponse
 from django.db import transaction
 
 import threading, os, re
+from multiprocessing import Pool
 
 
 def home_view(req):
@@ -154,15 +155,8 @@ class DeploymentThread(threading.Thread):
         self.clone_repositories()
         self.copy_files()
 
-        for cmd in self.command_queue:
-            if type(cmd) == type(""):
-                result = os.system(cmd)
-            else:
-                with open(cmd[0], "w") as F:
-                    F.write(cmd[1])
-                result = 0
-            if result != 0:
-                raise Exception("{} ==> {}".format(cmd, result))
+        p = Pool(1)
+        p.map(run_commands_process, [self.command_queue])
 
     def queue_command(self, cmd):
         self.command_queue.append(cmd)
@@ -199,4 +193,15 @@ class DeploymentThread(threading.Thread):
             self.queue_command((local_path, content))
             if file.is_executable:
                 self.queue_command("chmod +x {}".format(local_path))
+
+def run_commands_process(commands):
+    for cmd in commands:
+        if type(cmd) == type(""):
+            result = os.system(cmd)
+        else:
+            with open(cmd[0], "w") as F:
+                F.write(cmd[1])
+            result = 0
+        if result != 0:
+            raise Exception("{} ==> {}".format(cmd, result))
 
