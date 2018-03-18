@@ -177,7 +177,7 @@ class DeploymentThread(threading.Thread):
         for repo in self.repositories:
             local_path = os.path.join(self.mounting_point, repo.repo.local_path)
             self.queue_command("rm -rf {}".format(local_path))
-            self.queue_command("git clone {} {}".format(repo.repo.remote_path, local_path))
+            self.queue_command("cd {} && git clone {}".format(local_path, repo.repo.remote_path))
             self.queue_command("cd {} && git checkout {}".format(local_path, repo.commit))
             for op in sorted(list(filter(lambda op: op.repo.id == repo.id, self.build_options)), key=lambda op: op.option_priority):
                 self.queue_command("cd {} && {}".format(local_path, op.option_command))
