@@ -188,14 +188,7 @@ class DeploymentThread(threading.Thread):
         self.copy_files()
 
         for cmd in self.command_queue:
-            if type(cmd) == type(""):
-                result = os.system(cmd)
-            else:
-                with open(cmd[0], "wb") as F:
-                    F.write(cmd[1].encode('utf-8'))
-                result = 0
-            if result != 0:
-                raise Exception("{} ==> {}".format(cmd, result))
+            cmd.run()
 
     def queue_command(self, cmd):
         self.command_queue.append(cmd)
