@@ -99,6 +99,39 @@ class RunningDeploymentViewSet(viewsets.ModelViewSet):
     queryset = RunningDeployment.objects.all()
     serializer_class = RunningDeploymentSerializer
 
+
+class COMMAND(object):
+    def run(self):
+        pass
+
+class BASH_COMMAND(COMMAND):
+    def __init__(self, cmd, silent=False):
+        self.cmd = cmd
+        self.silent = silent
+
+    def run(self):
+        try:
+            err = os.system(self.cmd)
+        except:
+            err = -1
+
+        if err != 0 and not self.silent:
+            raise Exception("{} ==> {}".format(cmd, err))
+
+class WRITE_FILE_COMMAND(COMMAND):
+    def __init__(self, path, content, silent=False):
+        self.path = path
+        self.content = content
+        self.silent = silent
+
+    def run(self):
+        try:
+            with open(self.path, "wb") as F:
+                F.write(self.content.encode('utf-8'))
+        except Exception as e:
+            if not self.silent:
+                raise e
+
 class DeploymentThread(threading.Thread):
     def __init__(self, deployment_lock, firmware, config, dep, params, options):
         threading.Thread.__init__(self)
@@ -150,44 +183,39 @@ class DeploymentThread(threading.Thread):
                 self.deployment_lock.delete()
 
     def deploy(self):
-        try:
-            self.setup_image()
-            self.clone_repositories()
-            self.copy_files()
+        self.setup_image()
+        self.clone_repositories()
+        self.copy_files()
 
-            for cmd in self.command_queue:
-                if type(cmd) == type(""):
-                    result = os.system(cmd)
-                else:
-                    with open(cmd[0], "w") as F:
-                        F.write(cmd[1])
-                    result = 0
-                if result != 0:
-                    raise Exception("{} ==> {}".format(cmd, result))
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            raise e
+        for cmd in self.command_queue:
+            if type(cmd) == type(""):
+                result = os.system(cmd)
+            else:
+                with open(cmd[0], "wb") as F:
+                    F.write(cmd[1].encode('utf-8'))
+                result = 0
+            if result != 0:
+                raise Exception("{} ==> {}".format(cmd, result))
 
     def queue_command(self, cmd):
         self.command_queue.append(cmd)
 
     def setup_image(self):
-        self.queue_command("umount {}".format(self.mounting_point))
-        self.queue_command("rm -rf {}".format(self.mounting_point))
-        self.queue_command("mkdir {}".format(self.mounting_point))
-        self.queue_command("mount {} {}".format(self.disk_path, self.mounting_point))
+        self.queue_command(BASH_COMMAND("umount {}".format(self.mounting_point), silent=True))
+        self.queue_command(BASH_COMMAND("rm -rf {}".format(self.mounting_point), silent=True))
+        self.queue_command(BASH_COMMAND("mkdir {}".format(self.mounting_point)))
+        self.queue_command(BASH_COMMAND("mount {} {}".format(self.disk_path, self.mounting_point)))
 
     def clone_repositories(self):
         for repo in self.repositories:
             repo_local_path = repo.repo.local_path
             if len(repo_local_path) > 0 and repo_local_path[0] == '/': repo_local_path = repo_local_path[1:]
             local_path = os.path.join(self.mounting_point, repo_local_path)
-            self.queue_command("rm -rf {}".format(local_path))
-            self.queue_command("eval \"$(ssh-agent -s)\" && ssh-add /home/pi/.ssh/id_rsa && git clone {} {}".format(repo.repo.remote_path, local_path))
-            self.queue_command("cd {} && git checkout {}".format(local_path, repo.commit))
+            self.queue_command(BASH_COMMAND("rm -rf {}".format(local_path), silent=True))
+            self.queue_command(BASH_COMMAND("eval \"$(ssh-agent -s)\" && ssh-add /home/pi/.ssh/id_rsa && git clone {} {}".format(repo.repo.remote_path, local_path)))
+            self.queue_command(BASH_COMMAND("cd {} && git checkout {}".format(local_path, repo.commit)))
             for op in sorted(list(filter(lambda op: op.repo.id == repo.id, self.build_options)), key=lambda op: op.option_priority):
-                self.queue_command("cd {} && {}".format(local_path, op.option_command))
+                self.queue_command(BASH_COMMAND("cd {} && {}".format(local_path, op.option_command)))
 
     def copy_files(self):
         ARGUMENTS = {}
@@ -201,7 +229,7 @@ class DeploymentThread(threading.Thread):
             content = file.file_contents
             for kw in re.findall('\{\{(.+)\}\}', content):
                 content = content.replace("{{" + kw + "}}", str(ARGUMENTS[kw]))
-            self.queue_command((local_path, content))
+            self.queue_command(WRITE_FILE_COMMAND(local_path, content))
             if file.is_executable:
-                self.queue_command("chmod +x {}".format(local_path))
+                self.queue_command(BASH_COMMAND("chmod +x {}".format(local_path)))
 
