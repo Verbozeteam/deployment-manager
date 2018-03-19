@@ -116,7 +116,7 @@ class BASH_COMMAND(COMMAND):
             err = -1
 
         if err != 0 and not self.silent:
-            raise Exception("{} ==> {}".format(cmd, err))
+            raise Exception("{} ==> {}".format(self.cmd, err))
 
 class WRITE_FILE_COMMAND(COMMAND):
     def __init__(self, path, content, silent=False):
@@ -145,7 +145,8 @@ class DeploymentThread(threading.Thread):
         self.files = self.find_all_files(base=self.config)
 
         self.command_queue = []
-        self.disk_path = "/dev/sda2"
+        self.disk_path = "/dev/sda"
+        self.disk_partition_path = self.disk_path + "2"
         self.mounting_point = "/home/pi/mnt/"
 
     def find_all_repositories(self, base=None):
@@ -194,10 +195,12 @@ class DeploymentThread(threading.Thread):
         self.command_queue.append(cmd)
 
     def setup_image(self):
+        if self.firmware:
+            self.queue_command(BASH_COMMAND("dd if={} of={} bs=8M".format(self.firmware.local_path, self.disk_partition_path)))
         self.queue_command(BASH_COMMAND("umount {}".format(self.mounting_point), silent=True))
         self.queue_command(BASH_COMMAND("rm -rf {}".format(self.mounting_point), silent=True))
         self.queue_command(BASH_COMMAND("mkdir {}".format(self.mounting_point)))
-        self.queue_command(BASH_COMMAND("mount {} {}".format(self.disk_path, self.mounting_point)))
+        self.queue_command(BASH_COMMAND("mount {} {}".format(self.disk_partition_path, self.mounting_point)))
 
     def clone_repositories(self):
         for repo in self.repositories:

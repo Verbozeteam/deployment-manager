@@ -21,7 +21,7 @@ export default class DeploymentForm extends React.Component {
         var repositories = DataManager.getConfigRepositories(config, true);
         var buildOptions = [];
         for (var i = 0; i < repositories.length; i++)
-            buildOptions = buildOptions.concat(DataManager.getRepositoryBuildOptions(repositories[i].id));
+            buildOptions = buildOptions.concat(DataManager.getRepositoryBuildOptions(repositories[i].repo));
         var boDict = {};
         for (var i = 0; i < buildOptions.length; i++)
             boDict[buildOptions[i].option_name] = {...buildOptions[i], isChecked: false};
