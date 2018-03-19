@@ -150,19 +150,24 @@ class DeploymentThread(threading.Thread):
                 self.deployment_lock.delete()
 
     def deploy(self):
-        self.setup_image()
-        self.clone_repositories()
-        self.copy_files()
+        try:
+            self.setup_image()
+            self.clone_repositories()
+            self.copy_files()
 
-        for cmd in self.command_queue:
-            if type(cmd) == type(""):
-                result = os.system(cmd)
-            else:
-                with open(cmd[0], "w") as F:
-                    F.write(cmd[1])
-                result = 0
-            if result != 0:
-                raise Exception("{} ==> {}".format(cmd, result))
+            for cmd in self.command_queue:
+                if type(cmd) == type(""):
+                    result = os.system(cmd)
+                else:
+                    with open(cmd[0], "w") as F:
+                        F.write(cmd[1])
+                    result = 0
+                if result != 0:
+                    raise Exception("{} ==> {}".format(cmd, result))
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            raise e
 
     def queue_command(self, cmd):
         self.command_queue.append(cmd)
