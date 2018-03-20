@@ -225,6 +225,7 @@ class DeploymentThread(threading.Thread):
             content = file.file_contents
             for kw in re.findall('\{\{(.+)\}\}', content):
                 content = content.replace("{{" + kw + "}}", str(ARGUMENTS[kw]))
+            content = content.replace('\r\n', '\n')
             self.queue_command(WRITE_FILE_COMMAND(local_path, content))
             if file.is_executable:
                 self.queue_command(BASH_COMMAND("chmod +x {}".format(local_path)))
