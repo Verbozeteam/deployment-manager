@@ -48,7 +48,7 @@ export default class DeploymentManager extends React.Component {
             deployments[k] = deployments[k].sort((a, b) => new Date(b.date) - new Date(a.date));
 
         var deploymentList = Object.keys(deployments).map(target =>
-            <div>
+            <div key={"deployment-"+target}>
                 <h4>{target}</h4>
                 {deployments[target].map(deployment =>
                     <NiceButton
