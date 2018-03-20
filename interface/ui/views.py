@@ -1,6 +1,6 @@
 from ui.models import *
 from rest_framework import viewsets
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from ui.serializers import *
 
 from rest_framework.response import Response
@@ -38,6 +38,56 @@ class DeploymentConfigViewSet(viewsets.ModelViewSet):
     permission_classes = ()
     queryset = DeploymentConfig.objects.all()
     serializer_class = DeploymentConfigSerializer
+
+    @detail_route(methods=['post'], authentication_classes=[], permission_classes=[])
+    def new_version(self, request, pk=None):
+        config = self.get_object()
+        try:
+            with transaction.atomic():
+                self.clone_new_version(config, config.parent)
+        except Exception as e:
+            print (e)
+            return Response(data={'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)
+
+    def clone_new_version(self, config, parent):
+        if config == None:
+            return None
+
+        assert(not config.can_be_changed())
+
+        # copy the config itself (with +1 version number)
+        new_config = DeploymentConfig.objects.create(parent=parent, name=config.name, version=config.version+1)
+        # copy deployment repositories
+        repos = DeploymentRepository.objects.filter(deployment=config)
+        for R in repos:
+            DeploymentRepository.objects.create(repo=R.repo, commit=R.commit, deployment=new_config)
+        # copy deployment files
+        files = DeploymentFile.objects.filter(deployment=config)
+        for F in files:
+            new_F = DeploymentFile.objects.create(target_filename=F.target_filename, file_contents=F.file_contents, is_executable=F.is_executable, deployment=new_config)
+            # copy deployment file defaults
+            file_params = FileDefaultParameter.objects.filter(file=F)
+            for FP in file_params:
+                FileDefaultParameter.objects.create(is_required=FP.is_required, parameter_name=FP.parameter_name, parameter_value=FP.parameter_value, file=new_F)
+
+        # make all children point to the new versions if they are editable
+        # otherwise, recursively copy the children that can't be edited
+        children = DeploymentConfig.objects.filter(parent=config)
+        # remove old versions
+        seen_child_version = {}
+        for c in children:
+            if c.name not in seen_child_version or seen_child_version[c.name].version < c.version:
+                seen_child_version[c.name] = c
+
+        for c in seen_child_version.values():
+            if c.can_be_changed():
+                c.parent = new_config
+                c.save()
+            else:
+                self.clone_new_version(c, new_config)
+
+        return new_config
 
 class DeploymentFileViewSet(viewsets.ModelViewSet):
     authentication_classes = ()

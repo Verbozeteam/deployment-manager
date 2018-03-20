@@ -50,7 +50,10 @@ class DeploymentConfig(models.Model):
         if Deployment.objects.filter(config=self.pk).exists():
             return False # Deployment configuration is deployed somewhere
 
-        # make sure to child deployment config has been deployed either
+        if DeploymentConfig.objects.filter(name=self.name, version=self.version+1).exists():
+            return False # If a new version is available, this is not editable
+
+        # make sure no child deployment config has been deployed either
         children = list(DeploymentConfig.objects.filter(parent=self))
         while len(children) > 0:
             c = children[0]

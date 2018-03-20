@@ -69,6 +69,10 @@ class DataManagerImpl {
         return this.serverData.deploymentConfigs.filter(cfg => cfg.id == id)[0];
     }
 
+    getConfigsByName(name) {
+        return this.serverData.deploymentConfigs.filter(cfg => cfg.name == name);
+    }
+
     getAllFirmwares() {
         return this.serverData.firmwares;
     }
@@ -139,7 +143,10 @@ class DataManagerImpl {
 
     isDeploymentConfigEditable(config) {
         // deployment is editable if neither it nor any of its children are deployed
+        // and it is the latest version
         if (this.getConfigDeployments(config).length > 0)
+            return false;
+        if (config.version !== this.getConfigsByName(config.name).map(c => c.version).reduce((a, b) => Math.max(a, b)))
             return false;
 
         // get fucked
@@ -259,6 +266,16 @@ class DataManagerImpl {
     deleteLock(lock) {
         clearTimeout(this._reloadTimout);
         this._apiCall('DELETE', '/ui/running_deployment/'+lock.id+'/');
+    }
+
+    createNewVersion(config) {
+        // first find all different versions of that config
+        var allConfigs = this.getConfigsByName(config.name);
+        var latestVersion = allConfigs.map(c => c.version).reduce((a, b) => Math.max(a, b));
+        var latestConfig = allConfigs.filter(c => c.version == latestVersion)[0];
+        var newVersion = latestVersion + 1;
+        this._apiCall('POST', '/ui/deployment_config/'+latestConfig.id+'/new_version/', {});
+        return newVersion;
     }
 };
 
