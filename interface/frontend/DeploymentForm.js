@@ -10,7 +10,13 @@ export default class DeploymentForm extends React.Component {
         comment: "",
         params: [],
         options: {},
+        diskPath: "",
+        disksList: [],
     };
+
+    refreshDisks() {
+        DataManager.fetchMountingDevices(disks => this.setState({disksList: disks, diskPath: disks.length > 0 ? disks[0] : this.state.diskPath}));
+    }
 
     resetState(config) {
         var _params = DataManager.getConfigFiles(config, true).map(f => DataManager.getConfigFileParameters(f));
@@ -33,11 +39,13 @@ export default class DeploymentForm extends React.Component {
             comment: "",
             params: params,
             options: boDict,
+            diskPath: "",
         })
     }
 
     componentWillMount() {
         this.resetState(this.props.config);
+        this.refreshDisks();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -46,10 +54,10 @@ export default class DeploymentForm extends React.Component {
 
     deploy() {
         const { config } = this.props;
-        const { firmware, target, comment, params, burnFirmware, options } = this.state;
+        const { firmware, target, comment, params, burnFirmware, options, diskPath } = this.state;
 
-        if (target.trim() == "") {
-            console.log("Missing 'target'");
+        if (target.trim() == "" || diskPath.trim() == "") {
+            console.log("Missing 'target' or 'Mounting Disk Path'");
             return;
         }
 
@@ -61,22 +69,30 @@ export default class DeploymentForm extends React.Component {
         }
 
         var optionIds = Object.keys(options).filter(o => o.isChecked).map(o => options[o].id);
-        DataManager.deploy(config, burnFirmware ? firmware : -1, target, comment, params, optionIds);
+        DataManager.deploy(config, diskPath, burnFirmware ? firmware : -1, target, comment, params, optionIds);
     }
 
     render() {
         const { config } = this.props;
-        const { firmware, target, comment, params, burnFirmware, options } = this.state;
+        const { firmware, target, comment, params, burnFirmware, options, diskPath, disksList } = this.state;
 
         var firmwareList = DataManager.getAllFirmwares().map(f => <option key={'opf-'+f.id} value={f.id}>{f.local_path}</option>);
+        var diskList = disksList.concat("").map(d => <option key={'opd-'+d} value={d}>{d}</option>);
 
         return (
             <div style={styles.container}>
                 <div style={styles.row}>
+                    <div style={styles.fieldName}>Mounting Disk Path</div>
+                    <div style={styles.fieldValue}>
+                        <button onClick={() => this.refreshDisks.bind(this)}>Refresh</button>
+                        <select onChange={e => this.setState({diskPath: e.target.value})}>{diskList}</select>
+                    </div>
+                </div>
+                <div style={styles.row}>
                     <div style={styles.fieldName}>Firmware</div>
                     <div style={styles.fieldValue}>
                         <input type={"checkbox"} checked={burnFirmware} onChange={e => this.setState({burnFirmware: e.target.checked})} />
-                        <select>{firmwareList}</select>
+                        <select onChange={e => this.setState({firmware: e.target.value})}>{firmwareList}</select>
                     </div>
                 </div>
                 <div style={styles.row}>

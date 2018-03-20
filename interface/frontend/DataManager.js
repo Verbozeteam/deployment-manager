@@ -53,6 +53,15 @@ class DataManagerImpl {
         }).bind(this));
     }
 
+    fetchMountingDevices(on_success) {
+        axios({
+            method: 'GET',
+            url: '/ui/firmware/get_mounting_devices/',
+        }).then(ret => {
+            on_success(ret.data);
+        });
+    }
+
     registerListener(listener) {
         var lid = 1;
         while (lid in this._listeners) lid += 1;
@@ -252,7 +261,7 @@ class DataManagerImpl {
         this._apiCall('DELETE', '/ui/deployment_repository/'+repo.id+'/');
     }
 
-    deploy(config, firmwareId, target, comment, params, optionIds) {
+    deploy(config, diskPath, firmwareId, target, comment, params, optionIds) {
         this._apiCall('POST', '/ui/deployment/deploy/', {
             config: config.id,
             firmwareId,
@@ -260,6 +269,7 @@ class DataManagerImpl {
             comment,
             params,
             optionIds,
+            diskPath,
         });
     }
 

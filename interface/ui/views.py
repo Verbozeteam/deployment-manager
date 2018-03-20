@@ -10,6 +10,7 @@ from django.shortcuts import render, HttpResponse
 from django.db import transaction
 
 import threading, os, re
+from os import listdir
 
 
 def home_view(req):
@@ -20,6 +21,12 @@ class FirmwareViewSet(viewsets.ModelViewSet):
     permission_classes = ()
     queryset = Firmware.objects.all()
     serializer_class = FirmwareSerializer
+
+
+    @list_route(methods=['get'], authentication_classes=[], permission_classes=[])
+    def get_mounting_devices(self, request, pk=None):
+        devices = [os.path.join("/dev", f) for f in listdir("/dev/") if re.match("^sd[a-z]$", f) or re.match("^rdisk[1-9]$", f)]
+        return Response(data=devices, status=status.HTTP_200_OK)
 
 class RepositoryViewSet(viewsets.ModelViewSet):
     authentication_classes = ()
@@ -143,7 +150,8 @@ class DeploymentViewSet(viewsets.ModelViewSet):
                     options.append(RepositoryBuildOption.objects.get(pk=oid))
 
                 deployment_lock = RunningDeployment.objects.create(deployment=dep)
-                DeploymentThread(deployment_lock, firmware, config, dep, params, options).start()
+                disk_path = data["diskPath"]
+                DeploymentThread(deployment_lock, disk_path, firmware, config, dep, params, options).start()
         except Exception as e:
             return Response(data={'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
@@ -194,7 +202,7 @@ class WRITE_FILE_COMMAND(COMMAND):
                 raise e
 
 class DeploymentThread(threading.Thread):
-    def __init__(self, deployment_lock, firmware, config, dep, params, options):
+    def __init__(self, deployment_lock, disk_path, firmware, config, dep, params, options):
         threading.Thread.__init__(self)
         self.firmware = firmware
         self.deployment_lock = deployment_lock
@@ -206,7 +214,7 @@ class DeploymentThread(threading.Thread):
         self.files = self.find_all_files(base=self.config)
 
         self.command_queue = []
-        self.disk_path = "/dev/sda"
+        self.disk_path = disk_path
         self.disk_partition_path = self.disk_path + "2"
         self.mounting_point = "/home/pi/mnt/"
 

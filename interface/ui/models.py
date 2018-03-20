@@ -13,8 +13,9 @@ class Repository(models.Model):
     """
         Represents a repository that can be used in a deployment
     """
-    remote_path = models.CharField(max_length=2048, unique=True)
-    local_path = models.CharField(max_length=256, unique=True)
+    remote_path = models.CharField(max_length=2048, unique=True) # remote repository (e.g. github)
+    local_path = models.CharField(max_length=256, unique=True)   # local path relative to mounted FS
+    local_cache = models.CharField(max_length=256, blank=True)   # local path to a cached remote repository
 
     def __str__(self):
         return self.remote_path
