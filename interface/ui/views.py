@@ -50,6 +50,17 @@ class DeploymentConfigViewSet(viewsets.ModelViewSet):
             return Response(data={'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
 
+    @detail_route(methods=['post'], authentication_classes=[], permission_classes=[])
+    def update_parent(self, request, pk=None):
+        config = self.get_object()
+        try:
+            config.parent = sorted(DeploymentConfig.objects.filter(name=config.parent.name), key=lambda dc: -dc.version)[0]
+            config.save()
+        except Exception as e:
+            print (e)
+            return Response(data={'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)
+
     def clone_new_version(self, config, parent):
         if config == None:
             return None

@@ -277,6 +277,10 @@ class DataManagerImpl {
         this._apiCall('POST', '/ui/deployment_config/'+latestConfig.id+'/new_version/', {});
         return newVersion;
     }
+
+    updateParent(config) {
+        this._apiCall('POST', '/ui/deployment_config/'+config.id+'/update_parent/', {});
+    }
 };
 
 const DataManager = new DataManagerImpl();

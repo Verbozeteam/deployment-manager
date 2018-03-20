@@ -1,6 +1,5 @@
 import React from 'react';
 import DeploymentEditor from './DeploymentEditor';
-import DeploymentForm from './DeploymentForm';
 import DataManager from './DataManager';
 import NiceButton from './NiceButton';
 
@@ -49,19 +48,11 @@ export default class DeploymentManager extends React.Component {
 
         return (
             <div style={styles.container}>
-                <h3>Deployments</h3>
-                <div style={styles.deploymentsContainer}>
-                    <div style={styles.sidebar}>
-                        {deploymentList}
-                    </div>
-                    <div style={styles.contentContainer}>
-                        {contentView}
-                    </div>
+                <div style={styles.sidebar}>
+                    {deploymentList}
                 </div>
-                <br />
-                <h3>New Deployment</h3>
-                <div style={styles.deploymentsContainer}>
-                    <DeploymentForm config={config} />
+                <div style={styles.contentContainer}>
+                    {contentView}
                 </div>
             </div>
         );
@@ -72,11 +63,6 @@ const styles = {
     container: {
         display: 'flex',
         flex: 1,
-        flexDirection: 'column',
-        padding: 10,
-    },
-    deploymentsContainer: {
-        display: 'flex',
         flexDirection: 'row',
     },
     sidebar: {

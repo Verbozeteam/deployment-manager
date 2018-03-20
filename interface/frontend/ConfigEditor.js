@@ -6,6 +6,7 @@ import RepositoryEditor from './RepositoryEditor';
 import FileEditor from './FileEditor';
 import DeploymentManager from './DeploymentManager';
 import AddConfigForm from './AddConfigForm';
+import DeploymentForm from './DeploymentForm';
 
 const SELECTED_TYPES = {
     NONE: -1,
@@ -51,21 +52,27 @@ export default class ConfigEditor extends React.Component {
         return Object.values(dict);
     }
 
-    renderSidebarItems(config, indent=0) {
+    renderSidebarItems(config, indent=0, isLatest=true) {
         if (config.length == 0)
             return null;
 
         const { selectedConfigId } = this.state;
 
+        var allVersions = DataManager.getConfigsByName(config.name);
+        var allChildren = [];
+        for (var i = 0; i < allVersions.length; i++)
+            allChildren = allChildren.concat(DataManager.getConfigChildren(allVersions[i]));
+        allChildren = this.filterConfigChildren(allChildren);
+
         return (
             <div key={'sidebar-item-'+config.id} style={{marginLeft: indent}}>
                 <NiceButton
-                        extraStyle={{marginTop: 5, textAlign: 'left', paddingLeft: 5, borderTop: '', borderRight: '', borderLeft: '', backgroundColor: ''}}
+                        extraStyle={{marginTop: 5, textAlign: 'left', paddingLeft: 5, borderTop: '', borderRight: '', borderLeft: '', backgroundColor: '', color: isLatest? 'white' : 'gray'}}
                         isHighlighted={selectedConfigId == config.id}
                         onClick={() => this.setState({selectedConfigId: config.id, selectedVersion: config.version, selectedType: SELECTED_TYPES.NONE, isAddingConfig: false})}>
-                    {"• " + config.name + " (v" + (config.version) + ")"}
+                    {"• " + config.name + " (v" + (config.version) + ")" + (isLatest ? "" : " (OLD)")}
                 </NiceButton>
-                {this.filterConfigChildren(DataManager.getConfigChildren(config)).map(c => this.renderSidebarItems(c, 20))}
+                {allChildren.map(c => this.renderSidebarItems(c, 20, c.parent == config.id))}
             </div>
         );
     }
@@ -150,6 +157,7 @@ export default class ConfigEditor extends React.Component {
         var addRepoButton = null;
         var addFileButton = null;
         var deleteButton = null;
+        var updateButton = null;
         if (isEditable) {
             addRepoButton = (
                 <NiceButton
@@ -170,6 +178,13 @@ export default class ConfigEditor extends React.Component {
                         extraStyle={{width: 100, float: 'right'}}
                         onClick={(() => {this.setState({selectedConfigId: -1}); DataManager.deleteConfig(config)}).bind(this)} >
                     Delete
+                </NiceButton>
+            );
+            updateButton = (
+                <NiceButton
+                        extraStyle={{width: 200, float: 'right'}}
+                        onClick={() => DataManager.updateParent(config)} >
+                    Update Parent
                 </NiceButton>
             );
         }
@@ -212,10 +227,17 @@ export default class ConfigEditor extends React.Component {
 
                 <br />
                 {deleteButton}
+                {updateButton}
 
                 <br />
 
-                <DeploymentManager key={"dm-"+config.id} config={config} />
+                <div style={contentStyles.deploymentFormContainer}>
+                    <h3>New Deployment</h3>
+                    <DeploymentForm config={config} />
+                    <br />
+                    <h3>Deployments</h3>
+                    <DeploymentManager key={"dm-"+config.id} config={config} />
+                </div>
             </React.Fragment>
         );
     }
@@ -311,5 +333,10 @@ const contentStyles = {
         display: 'flex',
         flex: 3,
         flexDirection: 'column',
+    },
+    deploymentFormContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        padding: 10,
     },
 };
