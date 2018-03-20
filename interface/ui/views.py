@@ -187,6 +187,7 @@ class DeploymentThread(threading.Thread):
         self.setup_image()
         self.clone_repositories()
         self.copy_files()
+        self.unmount_image()
 
         for cmd in self.command_queue:
             cmd.run()
@@ -201,6 +202,11 @@ class DeploymentThread(threading.Thread):
         self.queue_command(BASH_COMMAND("rm -rf {}".format(self.mounting_point), silent=True))
         self.queue_command(BASH_COMMAND("mkdir {}".format(self.mounting_point)))
         self.queue_command(BASH_COMMAND("mount {} {}".format(self.disk_partition_path, self.mounting_point)))
+
+    def unmount_image(self):
+        self.queue_command(BASH_COMMAND("sync"))
+        self.queue_command(BASH_COMMAND("umount {}".format(self.mounting_point), silent=True))
+        self.queue_command(BASH_COMMAND("rm -rf {}".format(self.mounting_point), silent=True))
 
     def clone_repositories(self):
         for repo in self.repositories:
