@@ -25,7 +25,8 @@ class FirmwareViewSet(viewsets.ModelViewSet):
 
     @list_route(methods=['get'], authentication_classes=[], permission_classes=[])
     def get_mounting_devices(self, request, pk=None):
-        devices = [os.path.join("/dev", f) for f in listdir("/dev/") if re.match("^sd[a-z]$", f) or re.match("^rdisk[1-9]$", f)]
+        base = "/dev/"
+        devices = [os.path.join(base, f) for f in listdir(base) if re.match("^sd[a-z]$", f) or re.match("^rdisk[1-9]$", f)]
         return Response(data=devices, status=status.HTTP_200_OK)
 
 class RepositoryViewSet(viewsets.ModelViewSet):
