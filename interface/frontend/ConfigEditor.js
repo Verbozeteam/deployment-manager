@@ -236,7 +236,7 @@ export default class ConfigEditor extends React.Component {
                     <DeploymentForm config={config} />
                     <br />
                     <h3>Deployments</h3>
-                    <DeploymentManager key={"dm-"+config.id} config={config} />
+                    <DeploymentManager key={"dm-"+config.id} configs={allVersions} />
                 </div>
             </React.Fragment>
         );

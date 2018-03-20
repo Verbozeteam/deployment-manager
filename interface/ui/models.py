@@ -133,7 +133,7 @@ class Deployment(models.Model):
     config = models.ForeignKey(DeploymentConfig, on_delete=models.PROTECT)
     date = models.DateTimeField(auto_now_add=True)
     target = models.CharField(max_length=256)
-    comment = models.TextField()
+    comment = models.TextField(blank=True)
 
     def __str__(self):
         return "[{}] {}".format(self.date, self.config)

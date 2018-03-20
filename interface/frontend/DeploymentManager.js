@@ -28,15 +28,38 @@ export default class DeploymentManager extends React.Component {
 
     render() {
         const { selectedDeployment } = this.state;
-        const { config } = this.props;
+        const { configs } = this.props;
 
-        var deploymentList = DataManager.getConfigDeployments(config).map(deployment =>
-            <NiceButton
-                    key={"deployment-listitem-"+deployment.id}
-                    isHighlighted={selectedDeployment == deployment.id}
-                    onClick={() => this.setState({selectedDeployment: deployment.id})} >
-                {deployment.target}
-            </NiceButton>
+        var configDict = {};
+        var configDeployments = {};
+        var deployments = {};
+        for (var i = 0; i < configs.length; i++) {
+            configDict[configs[i].id] = configs[i];
+            configDeployments[configs[i].id] = DataManager.getConfigDeployments(configs[i]);
+            for (var j = 0; j < configDeployments[configs[i].id].length; j++) {
+                var dep = configDeployments[configs[i].id][j];
+                if (dep.target in deployments)
+                    deployments[dep.target].push(dep);
+                else
+                    deployments[dep.target] = [dep];
+            }
+        }
+        for (var k in deployments)
+            deployments[k] = deployments[k].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        var deploymentList = Object.keys(deployments).map(target =>
+            <div>
+                <h4>{target}</h4>
+                {deployments[target].map(deployment =>
+                    <NiceButton
+                            extraStyle={{marginLeft: 20}}
+                            key={"deployment-listitem-"+deployment.id}
+                            isHighlighted={selectedDeployment == deployment.id}
+                            onClick={() => this.setState({selectedDeployment: deployment.id})} >
+                        {new Date(deployment.date).toLocaleString() + " (v" + (configDict[deployment.config].version) + ")"}
+                    </NiceButton>
+                )}
+            </div>
         );
 
         var contentView = null;
