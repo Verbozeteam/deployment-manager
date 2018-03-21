@@ -84,7 +84,7 @@ export default class DeploymentForm extends React.Component {
                 <div style={styles.row}>
                     <div style={styles.fieldName}>Mounting Disk Path</div>
                     <div style={styles.fieldValue}>
-                        <button onClick={() => this.refreshDisks.bind(this)}>Refresh</button>
+                        <NiceButton extraStyle={{width: 200, float: "right"}} onClick={this.refreshDisks.bind(this)}>Refresh</NiceButton>
                         <select onChange={e => this.setState({diskPath: e.target.value})}>{diskList}</select>
                     </div>
                 </div>
