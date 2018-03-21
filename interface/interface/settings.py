@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '%%51+7=nk+chfqt4k)+$e7d0g)4%f=d^wjh@ehlkmld)r66o+!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False #True
 
 ALLOWED_HOSTS = ['*']
 
@@ -115,7 +115,7 @@ WEBPACK_LOADER = {
 CELERY_BEAT_SCHEDULE = {
     'fetch-repos': {
         'task': 'ui.tasks.fetch_repositories',
-        'schedule': 60.0,
+        'schedule': 90.0,
     },
 }
 CELERY_TIMEZONE = 'UTC'
