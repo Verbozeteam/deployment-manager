@@ -243,7 +243,7 @@ class DataManagerImpl {
     }
 
     updateDeploymentRepository(repo, repository, commit) {
-        this._apiCall('PATCH', '/ui/deployment_repository/'+file.id+'/', {
+        this._apiCall('PATCH', '/ui/deployment_repository/'+repo.id+'/', {
             repo: repository,
             commit: commit,
         });
