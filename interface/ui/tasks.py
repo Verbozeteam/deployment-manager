@@ -12,8 +12,8 @@ def fetch_repositories():
         if len(R.remote_path) > 0 and len(R.local_cache) > 0:
             # clone locally
             if os.path.isdir(R.local_cache):
-                os.system("eval \"$(ssh-agent -s)\" && ssh-add /home/pi/.ssh/id_rsa && cd {} && git fetch && sudo killall ssh-agent".format(R.local_cache))
+                os.system("eval \"$(ssh-agent -s)\" && ssh-add /home/pi/.ssh/id_rsa && cd {} && git fetch --all && sudo killall ssh-agent".format(R.local_cache))
             else:
-                os.system("eval \"$(ssh-agent -s)\" && ssh-add /home/pi/.ssh/id_rsa && git clone {} {} && sudo killall ssh-agent".format(R.remote_path, R.local_cache))
+                os.system("eval \"$(ssh-agent -s)\" && ssh-add /home/pi/.ssh/id_rsa && git clone {} {} && git fetch --all && sudo killall ssh-agent".format(R.remote_path, R.local_cache))
     
     return True
