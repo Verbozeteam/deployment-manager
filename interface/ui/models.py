@@ -13,8 +13,9 @@ class Repository(models.Model):
     """
         Represents a repository that can be used in a deployment
     """
-    remote_path = models.CharField(max_length=2048, unique=True)
-    local_path = models.CharField(max_length=256, unique=True)
+    remote_path = models.CharField(max_length=2048, unique=True) # remote repository (e.g. github)
+    local_path = models.CharField(max_length=256, unique=True)   # local path relative to mounted FS
+    local_cache = models.CharField(max_length=256, blank=True)   # local path to a cached remote repository
 
     def __str__(self):
         return self.remote_path
@@ -50,7 +51,10 @@ class DeploymentConfig(models.Model):
         if Deployment.objects.filter(config=self.pk).exists():
             return False # Deployment configuration is deployed somewhere
 
-        # make sure to child deployment config has been deployed either
+        if DeploymentConfig.objects.filter(name=self.name, version=self.version+1).exists():
+            return False # If a new version is available, this is not editable
+
+        # make sure no child deployment config has been deployed either
         children = list(DeploymentConfig.objects.filter(parent=self))
         while len(children) > 0:
             c = children[0]
@@ -130,7 +134,7 @@ class Deployment(models.Model):
     config = models.ForeignKey(DeploymentConfig, on_delete=models.PROTECT)
     date = models.DateTimeField(auto_now_add=True)
     target = models.CharField(max_length=256)
-    comment = models.TextField()
+    comment = models.TextField(blank=True)
 
     def __str__(self):
         return "[{}] {}".format(self.date, self.config)
@@ -145,3 +149,11 @@ class DeploymentParameter(models.Model):
 
     def __str__(self):
         return "[{}] {}:{}".format(self.deployment, self.parameter_name, self.parameter_value)
+
+class RunningDeployment(models.Model):
+    """
+        A deployment currently happening
+    """
+
+    deployment = models.ForeignKey(Deployment, on_delete=models.SET_NULL, null=True)
+    status = models.TextField(default="", blank="")

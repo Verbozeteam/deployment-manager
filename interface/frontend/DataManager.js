@@ -3,10 +3,13 @@ import axios from 'axios';
 class DataManagerImpl {
 
     _listeners = {};
+    _reloadTimout = undefined;
 
     serverData = {
+        deploymentLocks: [],
         firmwares: [],
         repositories: [],
+        repositoryBuildOptions: [],
         deploymentConfigs: [],
         deploymentFiles: [],
         fileDefaultParams: [],
@@ -32,8 +35,10 @@ class DataManagerImpl {
 
     load() {
         var promises = [
+            this.fetchData('/ui/running_deployment/', d => this.serverData.deploymentLocks = d),
             this.fetchData('/ui/firmware/', d => this.serverData.firmwares = d),
             this.fetchData('/ui/repository/', d => this.serverData.repositories = d),
+            this.fetchData('/ui/repository_build_option/', d => this.serverData.repositoryBuildOptions = d),
             this.fetchData('/ui/deployment_config/', d => this.serverData.deploymentConfigs = d),
             this.fetchData('/ui/deployment_file/', d => this.serverData.deploymentFiles = d),
             this.fetchData('/ui/file_default_parameter/', d => this.serverData.fileDefaultParams = d),
@@ -43,7 +48,18 @@ class DataManagerImpl {
         ];
         Promise.all(promises).then((results => {
             Object.values(this._listeners).map(l => l()); // call all listeners
+            if (this.serverData.deploymentLocks.length > 0)
+                this._reloadTimout = setTimeout(this.load.bind(this), 5000);
         }).bind(this));
+    }
+
+    fetchMountingDevices(on_success) {
+        axios({
+            method: 'GET',
+            url: '/ui/firmware/get_mounting_devices/',
+        }).then(ret => {
+            on_success(ret.data);
+        });
     }
 
     registerListener(listener) {
@@ -60,6 +76,10 @@ class DataManagerImpl {
 
     getConfigById(id) {
         return this.serverData.deploymentConfigs.filter(cfg => cfg.id == id)[0];
+    }
+
+    getConfigsByName(name) {
+        return this.serverData.deploymentConfigs.filter(cfg => cfg.name == name);
     }
 
     getAllFirmwares() {
@@ -88,6 +108,10 @@ class DataManagerImpl {
 
     getDeploymentById(id) {
         return this.serverData.deployments.filter(dep => dep.id == id)[0];
+    }
+
+    getRepositoryBuildOptions(repoId) {
+        return this.serverData.repositoryBuildOptions.filter(rbo => rbo.repo == repoId);
     }
 
     getConfigRepositories(config, traceInheritance=false) {
@@ -128,7 +152,10 @@ class DataManagerImpl {
 
     isDeploymentConfigEditable(config) {
         // deployment is editable if neither it nor any of its children are deployed
+        // and it is the latest version
         if (this.getConfigDeployments(config).length > 0)
+            return false;
+        if (config.version !== this.getConfigsByName(config.name).map(c => c.version).reduce((a, b) => Math.max(a, b)))
             return false;
 
         // get fucked
@@ -234,14 +261,35 @@ class DataManagerImpl {
         this._apiCall('DELETE', '/ui/deployment_repository/'+repo.id+'/');
     }
 
-    deploy(config, firmwareId, target, comment, params) {
+    deploy(config, diskPath, firmwareId, target, comment, params, optionIds) {
         this._apiCall('POST', '/ui/deployment/deploy/', {
             config: config.id,
             firmwareId,
             target,
             comment,
             params,
+            optionIds,
+            diskPath,
         });
+    }
+
+    deleteLock(lock) {
+        clearTimeout(this._reloadTimout);
+        this._apiCall('DELETE', '/ui/running_deployment/'+lock.id+'/');
+    }
+
+    createNewVersion(config) {
+        // first find all different versions of that config
+        var allConfigs = this.getConfigsByName(config.name);
+        var latestVersion = allConfigs.map(c => c.version).reduce((a, b) => Math.max(a, b));
+        var latestConfig = allConfigs.filter(c => c.version == latestVersion)[0];
+        var newVersion = latestVersion + 1;
+        this._apiCall('POST', '/ui/deployment_config/'+latestConfig.id+'/new_version/', {});
+        return newVersion;
+    }
+
+    updateParent(config) {
+        this._apiCall('POST', '/ui/deployment_config/'+config.id+'/update_parent/', {});
     }
 };
 
