@@ -1,0 +1,70 @@
+{
+    "id": "1",
+    "rooms": [{
+        "name": {{BLUEPRINT_NAME}},
+        "grid": [{
+            "ratio": 2,
+            "panels": [{
+                "ratio": 5,
+                "name": {
+                    "en": "Room Lights",
+                    "ar": "إضائة الغرفة"
+                },
+                "things": [{
+                    "category": "dimmers",
+                    "name": {
+                        "en": "Spotlight",
+                        "ar": "ضوء المسرح"
+                    },
+                    "dimmer_port": "d4"
+                }, {
+                    "category": "light_switches",
+                    "name": {
+                        "en": "Chandlier",
+                        "ar": "الثريا"
+                    },
+                    "switch_port": "d27",
+                    "on_state": 0
+                }, {
+                    "category": "light_switches",
+                    "name": {
+                        "en": "Hidden",
+                        "ar": "المخفي"
+                    },
+                    "switch_port": "d26",
+                    "on_state": 0
+                }]
+            }, {
+                "ratio": 3,
+                "name": {
+                    "en": "Curtains",
+                    "ar": "الستائر"
+                },
+                "things": [{
+                    "category": "curtains",
+                    "name": {
+                        "english": "Curtain 1"
+                    },
+                    "up_port": "d31",
+                    "down_port": "d30",
+                    "on_state": 0
+                }, {
+                    "category": "curtains",
+                    "name": {
+                        "english": "Curtain 2"
+                    },
+                    "up_port": "d33",
+                    "down_port": "d32",
+                    "on_state": 0
+                }]
+            }]
+        }],
+        "detail": {
+            "ratio": 4,
+            "side": "right"
+        },
+        "layout": {
+            "margin": 5
+        }
+    }]
+}
