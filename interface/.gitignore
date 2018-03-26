@@ -2,4 +2,3 @@ node_modules/
 .vs_code
 .DS_Store
 .env
-db.sqlite3
