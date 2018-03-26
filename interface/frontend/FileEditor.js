@@ -70,10 +70,7 @@ export default class FileEditor extends React.Component {
             var pname = oldParameterNames[i];
             if (paramNames.filter(n => pname == n).length == 0)
                 delete oldParameters[pname];
-            else
-                console.log(pname, " is in ", paramNames)
         }
-        console.log(oldParameters)
         for (var i = 0; i < paramNames.length; i++) {
             if (!(paramNames[i] in oldParameters)) {
                 if (paramNames[i] in defaultParamsDict)
