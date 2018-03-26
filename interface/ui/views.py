@@ -315,7 +315,7 @@ class DeploymentThread(threading.Thread):
         return json.dumps({
             "firmware": self.firmware.id,
             "config": self.config.id,
-            "deployment": self.deployment.id
+            "deployment": self.deployment.id,
             "date": str(self.deployment.date),
             "target": self.deployment.target,
             "comment": self.deployment.comment,
