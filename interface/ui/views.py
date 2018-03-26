@@ -218,6 +218,7 @@ class DeploymentThread(threading.Thread):
         self.disk_path = disk_path
         self.disk_partition_path = self.disk_path + "2"
         self.mounting_point = "/home/pi/mnt/"
+        self.deployment_info_filename = "/home/pi/.deployment"
 
     def find_all_repositories(self, base=None):
         if base == None:
@@ -307,4 +308,15 @@ class DeploymentThread(threading.Thread):
             self.queue_command(WRITE_FILE_COMMAND(local_path, content))
             if file.is_executable:
                 self.queue_command(BASH_COMMAND("chmod +x {}".format(local_path)))
+        # write deployment info file
+        self.queue_command(WRITE_FILE_COMMAND(os.path.join(self.mounting_point, self.deployment_info_filename), self.get_deployment_info()))
 
+    def get_deployment_info(self):
+        return json.dumps({
+            "firmware": self.firmware.id,
+            "config": self.config.id,
+            "deployment": self.deployment.id
+            "date": str(self.deployment.date),
+            "target": self.deployment.target,
+            "comment": self.deployment.comment,
+        })
