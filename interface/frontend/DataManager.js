@@ -218,6 +218,14 @@ class DataManagerImpl {
                 });
             }
         }
+
+        // remove parameters that don't exist anymore
+        for (var i in fileParams) {
+            var savedParam = fileParams[i];
+            if (!(savedParam.parameter_name in parameters)) {
+                this._apiCall('DELETE', '/ui/file_default_parameter/'+savedParam.id+'/', {});
+            }
+        }
     }
 
     updateDeploymentFile(file, targetFilename, executable, content, parameters) {
