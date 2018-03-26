@@ -115,7 +115,7 @@ WEBPACK_LOADER = {
 CELERY_BEAT_SCHEDULE = {
     'fetch-repos': {
         'task': 'ui.tasks.fetch_repositories',
-        'schedule': 90.0,
+        'schedule': 120.0,
     },
 }
 CELERY_TIMEZONE = 'UTC'

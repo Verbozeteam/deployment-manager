@@ -57,12 +57,32 @@ export default class FileEditor extends React.Component {
     }
 
     updateParameters() {
+        var defaultParams = DataManager.getConfigFileParameters(this.props.file);
+        var defaultParamsDict = {};
+        for (var i = 0; i < defaultParams.length; i++)
+            defaultParamsDict[defaultParams[i].parameter_name] = {value: defaultParams[i].parameter_value, required: defaultParams[i].is_required};
+
         var matches = this.state.content.match(/{{(.+?)}}/g) || [];
         var paramNames = Array.from(new Set(matches.map(m => m.substr(2, m.length-4))));
-        for (var i = 0; i < paramNames.length; i++) {
-            if (!(paramNames[i] in this.state.parameters))
-                this.setState({parameters: {...this.state.parameters, [paramNames[i]]: {value: "", required: false}}});
+
+        var oldParameters = JSON.parse(JSON.stringify(this.state.parameters));
+        var oldParameterNames = Object.keys(oldParameters);
+        for (var i = 0; i < oldParameterNames.length; i++) {
+            var pname = oldParameterNames[i];
+            if (paramNames.filter(n => pname == n).length == 0)
+                delete oldParameters[pname];
         }
+        for (var i = 0; i < paramNames.length; i++) {
+            if (!(paramNames[i] in oldParameters)) {
+                if (paramNames[i] in defaultParamsDict)
+                    oldParameters[paramNames[i]] = defaultParamsDict[paramNames[i]];
+                else
+                    oldParameters[paramNames[i]] = {value: "", required: false};
+            }
+        }
+
+        if (JSON.stringify(this.state.parameters) !== JSON.stringify(oldParameters))
+            this.setState({parameters: oldParameters});
     }
 
     renderContentView(targetFilename, content, isEditable) {

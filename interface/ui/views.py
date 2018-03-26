@@ -218,6 +218,7 @@ class DeploymentThread(threading.Thread):
         self.disk_path = disk_path
         self.disk_partition_path = self.disk_path + "2"
         self.mounting_point = "/home/pi/mnt/"
+        self.deployment_info_filename = "/home/pi/.deployment"
 
     def find_all_repositories(self, base=None):
         if base == None:
@@ -285,11 +286,10 @@ class DeploymentThread(threading.Thread):
             local_path = os.path.join(self.mounting_point, repo_local_path)
             self.queue_command(BASH_COMMAND("rm -rf {}".format(local_path), silent=True))
             if repo.repo.local_cache:
-                self.queue_command(BASH_COMMAND("git clone {} {}".format(repo.repo.local_cache, local_path)))
+                self.queue_command(BASH_COMMAND("git clone -b {} {} {}".format(repo.commit, repo.repo.local_cache, local_path)))
             else:
-                self.queue_command(BASH_COMMAND("eval \"$(ssh-agent -s)\" && ssh-add /home/pi/.ssh/id_rsa && git clone {} {} && sudo killall ssh-agent".format(repo.repo.remote_path, local_path)))
-            self.queue_command(BASH_COMMAND("cd {} && git checkout {}".format(local_path, repo.commit)))
-            for op in sorted(list(filter(lambda op: op.repo.id == repo.id, self.build_options)), key=lambda op: op.option_priority):
+                self.queue_command(BASH_COMMAND("eval \"$(ssh-agent -s)\" && ssh-add /home/pi/.ssh/id_rsa && git clone -b {} {} {} && sudo killall ssh-agent".format(repo.commit, repo.repo.remote_path, local_path)))
+            for op in sorted(list(filter(lambda op: op.repo.id == repo.repo.id, self.build_options)), key=lambda op: op.option_priority):
                 self.queue_command(BASH_COMMAND("cd {} && {}".format(local_path, op.option_command)))
 
     def copy_files(self):
@@ -308,4 +308,15 @@ class DeploymentThread(threading.Thread):
             self.queue_command(WRITE_FILE_COMMAND(local_path, content))
             if file.is_executable:
                 self.queue_command(BASH_COMMAND("chmod +x {}".format(local_path)))
+        # write deployment info file
+        self.queue_command(WRITE_FILE_COMMAND(os.path.join(self.mounting_point, self.deployment_info_filename), self.get_deployment_info()))
 
+    def get_deployment_info(self):
+        return json.dumps({
+            "firmware": self.firmware.id,
+            "config": self.config.id,
+            "deployment": self.deployment.id,
+            "date": str(self.deployment.date),
+            "target": self.deployment.target,
+            "comment": self.deployment.comment,
+        })
