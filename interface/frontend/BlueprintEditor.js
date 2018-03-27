@@ -7,8 +7,44 @@ export default class BlueprintEditor extends React.Component {
     viewType: 'structured', /* either structured or dump (dump == textfield) */
     version: 1,
     blueprint: {},
-    fields: {}
+    nodes: {}
   }
+
+  addableObjects = {
+    'light_switch': {
+      name: '+ Light Switch',
+      object: {
+        category: () => this.createField('light_switches', 'text'),
+        name: () => this.createNameField(),
+        switch_port: () => this.createField('', 'text'),
+        on_state: () => this.createField('', 'number')
+      }
+    },
+    'dimmer': {
+      name: '+ Dimmer',
+      object: {
+        category: () => this.createField('dimmer', 'text'),
+        name: () => this.createNameField(),
+        dimmer_port: this.createField('', 'text')
+      }
+    },
+    'panel': {
+      name: '+ Panel',
+      object: {
+        ratio: () => this.createField(1, 'number'),
+        name: () => this.createNameField(),
+        things: () => this.createArray([], ['light_switch', 'dimmer'])
+      }
+    },
+    'room': {
+      name: '+ Room',
+      object: {}
+    },
+    'column': {
+      name: '+ Column',
+      object: {}
+    }
+  };
 
   globalIds = 0;
 
@@ -25,10 +61,19 @@ export default class BlueprintEditor extends React.Component {
 
   /* create exportable array object in internal format */
   createArray(array, addables) {
+    const { nodes } = this.state;
+
+    const id = this.globalIds++;
+
+    nodes[id] = {};
+    nodes[id].collapsed = false;
+    this.setState({
+      nodes
+    });
+
     return {
       _type: 'array',
-      id: this.globalIds++,
-      collapsed: false,
+      id,
       array,
       addables,
     };
@@ -46,7 +91,7 @@ export default class BlueprintEditor extends React.Component {
 
   /* create exportable editor fields object in internal format */
   createField(value, type, validator, editable) {
-    const { fields } = this.state;
+    const { nodes } = this.state;
 
     if (typeof validator == 'undefined') {
       validator = () => {};
@@ -58,10 +103,11 @@ export default class BlueprintEditor extends React.Component {
 
     const id = this.globalIds++;
 
-    /* add initial value in fields */
-    fields[id] = value;
+    /* add initial value in node */
+    nodes[id] = {};
+    nodes[id].value = value;
     this.setState({
-      fields: fields
+      nodes
     });
 
     return {
@@ -73,16 +119,27 @@ export default class BlueprintEditor extends React.Component {
     };
   }
 
+  createNameField(name) {
+    if (typeof name === 'undefined') {
+      name = {
+        en: '',
+        ar: ''
+      };
+    }
+
+    return this.createObject({
+      en: this.createField(name.en, 'text'),
+      ar: this.createField(name.ar, 'text')
+    });
+  }
+
   v1ToEditorFormat(content) {
     console.log('v1ToEditorFormat()', content);
 
     const v1 = this.parseJson(content);
 
-    const createNameField = (name) => {
-      return this.createObject({
-        en: this.createField(name.en, 'text'),
-        ar: this.createField(name.ar, 'text')
-      });
+    if (Object.keys(v1).length === 0) {
+      return;
     }
 
     const blueprint = this.createObject({
@@ -93,13 +150,13 @@ export default class BlueprintEditor extends React.Component {
           ratio: this.createField(grid.ratio, 'number'),
           panels: this.createArray(grid.panels.map(panel => this.createObject({
             ratio: this.createField(panel.ratio, 'number'),
-            name: createNameField(panel.name),
+            name: this.createNameField(panel.name),
             things: this.createArray(panel.things.map(thing => this.createObject({
               category: this.createField(thing.category, 'text'),
-              name: createNameField(thing.name),
-            })), 'Thing')
-          })), 'Panel')
-        })), 'Grid'),
+              name: this.createNameField(thing.name),
+            })), ['light_switch', 'dimmer'])
+          })), ['panel'])
+        })), ['column']),
         detail: this.createObject({
           ratio: this.createField(room.detail.ratio, 'number'),
           side: this.createField(room.detail.side, 'text')
@@ -107,7 +164,7 @@ export default class BlueprintEditor extends React.Component {
         layout: this.createObject({
           margin: this.createField(room.layout.margin, 'number')
         })
-      })), 'Room')
+      })), ['room'])
     });
 
     this.setState({
@@ -154,10 +211,84 @@ export default class BlueprintEditor extends React.Component {
     );
   }
 
+  renderV1AddabledButton(button) {
+    if (!(button in this.addableObjects)) {
+      return null;
+    }
+
+    const onClick = () => {
+
+    };
+
+    return (
+      <NiceButton onClick={onClick}>
+        {this.addableObjects[button].name}
+      </NiceButton>
+    );
+  }
+
+  renderV1EditorNode(node, name) {
+    const { nodes } = this.state;
+
+    const toggleCollapse = () => {
+      nodes[node.id].collapsed = !nodes[node.id].collapsed;
+      this.setState({
+        nodes
+      });
+    }
+
+    switch(node._type) {
+      case 'object':
+        return (
+          <React.Fragment key={'v1-editor-object-' + node.id}>
+            {(typeof name !== 'undefined') ? name + ': ' : null}
+            <div style={styles.node}>
+              {Object.keys(node.object).map(key =>
+                this.renderV1EditorNode(node.object[key], key))}
+            </div>
+          </React.Fragment>
+        );
+        break;
+
+      case 'array':
+        return (
+          <React.Fragment key={'v1-editor-array-' + node.id}>
+            {name}:&nbsp;
+            <div style={styles.horizontal_flex}>
+              <NiceButton onClick={toggleCollapse}
+              extraStyle={styles.collapse}>{(nodes[node.id].collapsed) ? '<' : 'v'}</NiceButton>
+              {node.addables.map(addable => this.renderV1AddabledButton(addable))}
+            </div>
+            {(nodes[node.id].collapsed) ? null :
+              node.array.map(child => this.renderV1EditorNode(child))}
+          </React.Fragment>
+        );
+        break;
+
+      case 'field':
+        const onChange = (e) => {
+          nodes[node.id] = e.target.value;
+          this.setState({
+            nodes
+          });
+        }
+        return (
+          <div key={'v1-editor-field-' + node.id}>
+            {name}:&nbsp;
+            <input type={node.type}
+              value={nodes[node.id].value}
+              onChange={onChange} />
+          </div>
+        );
+        break;
+    }
+  }
+
   renderV1Editor() {
     const { blueprint } = this.state;
+    console.log('renderV1Editor()');
 
-    console.log('renderV1Editor()', blueprint);
+    return this.renderV1EditorNode(blueprint);
   }
 
   renderDumpEditor(blueprint) {
@@ -174,6 +305,10 @@ export default class BlueprintEditor extends React.Component {
 
   // TODO: implement this
   parseJson(json_string) {
+    if (json_string === '') {
+      return {};
+    }
+
     var index = json_string.indexOf('{{');
     // FIXME: this will alwasy be stuck at the first occurrence
     while (index !== -1 && json_string[index-1] !== '\"') {
@@ -217,12 +352,14 @@ const styles = {
         flexDirection: 'row'
     },
     node: {
-        // width: '100%',
         border: '1px solid #BA3737',
         backgroundColor: 'rgba(186, 55, 55, 0.1)',
-        padding: 20,
+        padding: 10,
         paddingRight: 0,
         marginTop: 5,
         marginBottom: 5
+    },
+    collapse: {
+      width: 20,
     }
 };
