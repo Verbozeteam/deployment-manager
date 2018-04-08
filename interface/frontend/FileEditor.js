@@ -1,6 +1,7 @@
 import React from 'react';
 import NiceButton from './NiceButton';
 import DataManager from './DataManager';
+import BlueprintEditor from './BlueprintEditor';
 
 export default class FileEditor extends React.Component {
     state = {
@@ -97,7 +98,10 @@ export default class FileEditor extends React.Component {
         if (isEditable) {
             filenameView = <input style={styles.fieldValue} value={targetFilename} onChange={e => this.setState({targetFilename: e.target.value})} />;
             executableView = <input type="checkbox" style={styles.fieldValue} checked={executable} onChange={e => this.setState({executable: e.target.checked})} />;
-            contentView = <textarea style={styles.fieldValue} value={content} onChange={e => this.setState({content: e.target.value})} rows={35} />;
+            if (targetFilename.endsWith("blueprint.json"))
+                contentView = <div style={styles.fieldValue}><BlueprintEditor json={content} isEditable={true} onChange={json => this.setState({content: json})} /></div>
+            else
+                contentView = <textarea style={styles.fieldValue} value={content} onChange={e => this.setState({content: e.target.value})} rows={35} />;
 
             var deleteButton = null;
             if (file && file.deployment == config.id) {
@@ -141,7 +145,10 @@ export default class FileEditor extends React.Component {
         } else {
             filenameView = <div style={styles.fieldValue}>{targetFilename}</div>;
             executableView = <div style={styles.fieldValue}>{executable ? "Yes" : "No"}</div>;
-            contentView = <textarea disabled style={styles.fieldValue} value={content} onChange={e => this.setState({content: e.target.value})} rows={35} />;
+            if (targetFilename.endsWith("blueprint.json"))
+            contentView = <div style={styles.fieldValue}><BlueprintEditor json={content} isEditable={false} onChange={json => this.setState({content: json})} /></div>
+            else
+                contentView = <textarea disabled style={styles.fieldValue} value={content} onChange={e => this.setState({content: e.target.value})} rows={35} />;
 
             paramsView = [];
             for (var key in parameters) {

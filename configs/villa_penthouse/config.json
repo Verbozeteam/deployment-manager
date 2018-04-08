@@ -1,0 +1,15 @@
+{
+    "hostapd_file": "/etc/hostapd/hostapd.conf",
+    "interfaces_file": "/etc/network/interfaces",
+    "init_d_file": "/etc/init.d/run_server",
+    "identity_file": "/home/pi/discovery/identity",
+
+    "blueprint_file": "/home/pi/middleware/blueprint.json",
+    "middleware_runner_file": "/home/pi/middleware/run_server.sh",
+
+    "middleware_commit": "242c0687cbe22df43277a6741afe2a66ec3d06dc",
+
+    "extra_commands_after": [
+        "sudo chmod +x /etc/init.d/run_server"
+    ]
+}

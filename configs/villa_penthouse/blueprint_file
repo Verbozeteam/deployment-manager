@@ -13,15 +13,15 @@
                 "things": [{
                     "category": "dimmers",
                     "name": {
-                        "en": "Spotlight 1",
-                        "ar": "ضوء المسرح 1"
+                        "en": "Dimmer 1",
+                        "ar": "ضوء 1"
                     },
                     "dimmer_port": "d4"
                 }, {
                     "category": "dimmers",
                     "name": {
-                        "en": "Spotlight 2",
-                        "ar": "ضوء المسرح 2"
+                        "en": "Dimmer 2",
+                        "ar": "ضوء 2"
                     },
                     "dimmer_port": "d5"
                 }, {
@@ -30,31 +30,23 @@
                         "en": "Chandlier",
                         "ar": "الثريا"
                     },
-                    "switch_port": "d22",
+                    "switch_port": "d26",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
                     "name": {
-                        "en": "Chandlier Bed",
-                        "ar": "ثريا السرير"
+                        "en": "Hidden 1",
+                        "ar": "المخفي 1"
                     },
-                    "switch_port": "d23",
+                    "switch_port": "d27",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
                     "name": {
-                        "en": "Hidden",
-                        "ar": "المخفي"
+                        "en": "Hidden 2",
+                        "ar": "المخفي 2"
                     },
-                    "switch_port": "d24",
-                    "on_state": 0
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Hidden Bed",
-                        "ar": "مخفي السرير"
-                    },
-                    "switch_port": "d25",
+                    "switch_port": "d28",
                     "on_state": 0
                 }]
             }, {
@@ -68,29 +60,13 @@
                     "name": {
                         "english": "Curtain 1"
                     },
-                    "up_port": "d26",
-                    "down_port": "d27",
-                    "on_state": 0
-                }, {
-                    "category": "curtains",
-                    "name": {
-                        "english": "Curtain 2"
-                    },
-                    "up_port": "d28",
-                    "down_port": "d29",
-                    "on_state": 0
-                }, {
-                    "category": "curtains",
-                    "name": {
-                        "english": "Curtain 3"
-                    },
                     "up_port": "d30",
                     "down_port": "d31",
                     "on_state": 0
                 }, {
                     "category": "curtains",
                     "name": {
-                        "english": "Curtain 4"
+                        "english": "Curtain 2"
                     },
                     "up_port": "d32",
                     "down_port": "d33",
@@ -109,10 +85,10 @@
                         "ar": "التكييف"
                     },
                     "temperature_port": "v0",
-                    "fan_low_port": "d34",
-                    "fan_medium_port": "d35",
-                    "fan_high_port": "d36",
-                    "digital_valve_port": "d37",
+                    "fan_low_port": "d22",
+                    "fan_medium_port": "d23",
+                    "fan_high_port": "d24",
+                    "digital_valve_port": "d25",
                     "virtual_port_data": [[0, 0]],
                     "on_state": 0
                 }]
