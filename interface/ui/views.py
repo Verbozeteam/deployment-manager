@@ -314,7 +314,7 @@ class DeploymentThread(threading.Thread):
 
     def get_deployment_info(self):
         return json.dumps({
-            "firmware": self.firmware.id,
+            "firmware": self.firmware.id if self.firmware else -1,
             "config": self.config.id,
             "deployment": self.deployment.id,
             "date": str(self.deployment.date),
