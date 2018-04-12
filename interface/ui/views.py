@@ -182,6 +182,9 @@ class BASH_COMMAND(COMMAND):
         self.silent = silent
 
     def run(self, lock):
+        lock.stdout += "~~~~{}".format(self.cmd)
+        lock.save()
+
         proc = subprocess.Popen(self.cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         (out, err) = proc.communicate()
         ret = proc.returncode
