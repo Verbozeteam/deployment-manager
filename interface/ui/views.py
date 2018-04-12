@@ -188,8 +188,8 @@ class BASH_COMMAND(COMMAND):
 
         lock.stdout += out + "\n" + err + "\n"
         lock.save()
-        if err != 0 and not self.silent:
-            raise Exception("{} ==> {}".format(self.cmd, err))
+        if ret != 0 and not self.silent:
+            raise Exception("{} ==> {}".format(self.cmd, ret))
 
 class WRITE_FILE_COMMAND(COMMAND):
     def __init__(self, path, content, silent=False):
