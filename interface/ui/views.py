@@ -269,7 +269,7 @@ class DeploymentThread(threading.Thread):
 
     def setup_image(self):
         if self.firmware:
-            self.queue_command(BASH_COMMAND("dd if={} of={} bs=8M".format(self.firmware.local_path, self.disk_partition_path)))
+            self.queue_command(BASH_COMMAND("dd if={} of={} bs=8M".format(self.firmware.local_path, self.disk_path)))
         self.queue_command(BASH_COMMAND("umount {}".format(self.mounting_point), silent=True))
         self.queue_command(BASH_COMMAND("rm -rf {}".format(self.mounting_point), silent=True))
         self.queue_command(BASH_COMMAND("mkdir {}".format(self.mounting_point)))
