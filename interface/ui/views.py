@@ -288,10 +288,10 @@ class DeploymentThread(threading.Thread):
             self.queue_command(BASH_COMMAND("rm -rf {}".format(local_path), silent=True))
             if repo.repo.local_cache:
                 self.queue_command(BASH_COMMAND("git clone {} {}".format(repo.repo.local_cache, local_path)))
-                self.queue_command(BASH_COMMAND("cd {} && git checkout {}".format(repo.commit)))
+                self.queue_command(BASH_COMMAND("cd {} && git checkout {}".format(local_path, repo.commit)))
             else:
                 self.queue_command(BASH_COMMAND("eval \"$(ssh-agent -s)\" && ssh-add /home/pi/.ssh/id_rsa && git clone {} {} && sudo killall ssh-agent".format(repo.repo.remote_path, local_path)))
-                self.queue_command(BASH_COMMAND("cd {} && git checkout {}".format(repo.commit)))
+                self.queue_command(BASH_COMMAND("cd {} && git checkout {}".format(local_path, repo.commit)))
             for op in sorted(list(filter(lambda op: op.repo.id == repo.repo.id, self.build_options)), key=lambda op: op.option_priority):
                 self.queue_command(BASH_COMMAND("cd {} && {}".format(local_path, op.option_command)))
 
