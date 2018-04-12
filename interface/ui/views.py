@@ -10,6 +10,7 @@ from django.shortcuts import render, HttpResponse
 from django.db import transaction
 
 import threading, os, re
+import subprocess
 import json
 from os import listdir
 
@@ -172,7 +173,7 @@ class RunningDeploymentViewSet(viewsets.ModelViewSet):
 
 
 class COMMAND(object):
-    def run(self):
+    def run(self, lock):
         pass
 
 class BASH_COMMAND(COMMAND):
@@ -180,12 +181,13 @@ class BASH_COMMAND(COMMAND):
         self.cmd = cmd
         self.silent = silent
 
-    def run(self):
-        try:
-            err = os.system(self.cmd)
-        except:
-            err = -1
+    def run(self, lock):
+        proc = subprocess.Popen(self.cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        (out, err) = proc.communicate()
+        ret = proc.returncode
 
+        lock.stdout += out + "\n" + err + "\n"
+        lock.save()
         if err != 0 and not self.silent:
             raise Exception("{} ==> {}".format(self.cmd, err))
 
@@ -195,10 +197,12 @@ class WRITE_FILE_COMMAND(COMMAND):
         self.content = content
         self.silent = silent
 
-    def run(self):
+    def run(self, lock):
         try:
             with open(self.path, "wb") as F:
                 F.write(self.content.encode('utf-8'))
+            lock.stdout += "Wrote to file {}".format(self.path)
+            lock.save()
         except Exception as e:
             if not self.silent:
                 raise e
@@ -253,7 +257,8 @@ class DeploymentThread(threading.Thread):
             self.deployment.delete()
         finally:
             if self.deployment_lock.status == "":
-                self.deployment_lock.delete()
+                self.deployment_lock.status = "OK"
+                self.deployment_lock.save()
 
     def deploy(self):
         self.setup_image()
@@ -262,7 +267,7 @@ class DeploymentThread(threading.Thread):
         self.unmount_image()
 
         for cmd in self.command_queue:
-            cmd.run()
+            cmd.run(self.deployment_lock)
 
     def queue_command(self, cmd):
         self.command_queue.append(cmd)

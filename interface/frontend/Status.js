@@ -9,7 +9,8 @@ export default class Status extends React.Component {
         return (
             <div>
                 <div>
-                    {lock.status == "" ? "Loading..." : ("Error: " + lock.status)}
+                    <p>{lock.stdout}</p>
+                    <p style={{color: 'red'}}>{lock.status == "" ? "Loading..." : ("Error: " + lock.status)}</p>
                 </div>
                 <div>
                     {lock.status == "" ? null :
