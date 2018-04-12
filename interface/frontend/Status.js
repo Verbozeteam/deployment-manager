@@ -9,7 +9,7 @@ export default class Status extends React.Component {
         return (
             <div>
                 <div>
-                    <p>{lock.stdout}</p>
+                    {lock.stdout.split('\n').map((line, i) => <p key={'errline-'+i}>{line}</p>)}
                     <p style={{color: 'red'}}>{lock.status == "" ? "Loading..." : ("Error: " + lock.status)}</p>
                 </div>
                 <div>
