@@ -186,7 +186,7 @@ class BASH_COMMAND(COMMAND):
         (out, err) = proc.communicate()
         ret = proc.returncode
 
-        lock.stdout += out + "\n" + err + "\n"
+        lock.stdout += out.decode() + "\n" + err.decode() + "\n"
         lock.save()
         if ret != 0 and not self.silent:
             raise Exception("{} ==> {}".format(self.cmd, ret))
