@@ -269,7 +269,7 @@ class DataManagerImpl {
         this._apiCall('DELETE', '/ui/deployment_repository/'+repo.id+'/');
     }
 
-    deploy(config, diskPath, firmwareId, target, comment, params, optionIds) {
+    deploy(config, diskPath, firmwareId, target, comment, params, optionIds, disabledRepoIds) {
         this._apiCall('POST', '/ui/deployment/deploy/', {
             config: config.id,
             firmwareId,
@@ -278,6 +278,7 @@ class DataManagerImpl {
             params,
             optionIds,
             diskPath,
+            disabledRepoIds,
         });
     }
 

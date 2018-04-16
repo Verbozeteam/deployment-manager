@@ -151,10 +151,11 @@ class DeploymentViewSet(viewsets.ModelViewSet):
                 options = []
                 for oid in data["optionIds"]:
                     options.append(RepositoryBuildOption.objects.get(pk=oid))
+                disabled_repo_ids = data.get("disabledRepoIds", [])
 
                 deployment_lock = RunningDeployment.objects.create(deployment=dep)
                 disk_path = data["diskPath"]
-                DeploymentThread(deployment_lock, disk_path, firmware, config, dep, params, options).start()
+                DeploymentThread(deployment_lock, disk_path, firmware, config, dep, params, options, disabled_repo_ids).start()
         except Exception as e:
             return Response(data={'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
@@ -211,7 +212,7 @@ class WRITE_FILE_COMMAND(COMMAND):
                 raise e
 
 class DeploymentThread(threading.Thread):
-    def __init__(self, deployment_lock, disk_path, firmware, config, dep, params, options):
+    def __init__(self, deployment_lock, disk_path, firmware, config, dep, params, options, disabled_repo_ids):
         threading.Thread.__init__(self)
         self.firmware = firmware
         self.deployment_lock = deployment_lock
@@ -221,6 +222,7 @@ class DeploymentThread(threading.Thread):
         self.build_options = options
         self.repositories = self.find_all_repositories(base=self.config)
         self.files = self.find_all_files(base=self.config)
+        self.disabled_repo_ids = disabled_repo_ids
 
         self.command_queue = []
         self.disk_path = disk_path
@@ -290,6 +292,8 @@ class DeploymentThread(threading.Thread):
 
     def clone_repositories(self):
         for repo in self.repositories:
+            if repo.id in self.disabled_repo_ids:
+                continue
             repo_local_path = repo.repo.local_path
             if len(repo_local_path) > 0 and repo_local_path[0] == '/': repo_local_path = repo_local_path[1:]
             local_path = os.path.join(self.mounting_point, repo_local_path)
