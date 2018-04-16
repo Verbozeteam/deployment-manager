@@ -205,7 +205,7 @@ class WRITE_FILE_COMMAND(COMMAND):
         try:
             with open(self.path, "wb") as F:
                 F.write(self.content.encode('utf-8'))
-            lock.stdout += "Wrote to file {}".format(self.path)
+            lock.stdout += "Wrote to file {}\n".format(self.path)
             lock.save()
         except Exception as e:
             if not self.silent:
