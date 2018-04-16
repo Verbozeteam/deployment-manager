@@ -112,7 +112,7 @@ export default class DeploymentForm extends React.Component {
                 </div>
                 {depRepos.map(repo =>
                     <div key={'rbo-'+repo.id} style={styles.row}>
-                        <div style={styles.fieldName}>{DataManager.getRepoById(repo.repo).remote_path}</div>
+                        <div style={styles.fieldName}>{((rp) => rp.slice(rp.slice(0, rp.length-2).lastIndexOf('/')))(DataManager.getRepoById(repo.repo).remote_path)}</div>
                         <input style={styles.fieldValue} type={"checkbox"} checked={disabledRepoIds.indexOf(repo.id) == -1} onChange={e => this.setState({disabledRepoIds: e.target.checked ? disabledRepoIds.filter(rid => rid != repo.id) : disabledRepoIds.concat(repo.id)})} />
                     </div>
                 )}
