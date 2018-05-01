@@ -35,14 +35,6 @@
                 }, {
                     "category": "light_switches",
                     "name": {
-                        "en": "Chandelier Bed",
-                        "ar": "ثريا السرير"
-                    },
-                    "switch_port": "d23",
-                    "on_state": 0
-                }, {
-                    "category": "light_switches",
-                    "name": {
                         "en": "Hidden",
                         "ar": "المخفي"
                     },
@@ -110,7 +102,7 @@
                     },
                     "temperature_port": "v0",
                     "fan_low_port": "d34",
-                    "fan_medium_port": "d35",
+                    "fan_med_port": "d35",
                     "fan_high_port": "d36",
                     "digital_valve_port": "d37",
                     "virtual_port_data": [[0, 0]],

@@ -63,6 +63,14 @@
                     "up_port": "d25",
                     "down_port": "d26",
                     "on_state": 0
+                }, {
+                    "category": "curtains",
+                    "name": {
+                        "en": "Curtain 2"
+                    },
+                    "up_port": "d27",
+                    "down_port": "d28",
+                    "on_state": 0
                 }]
             }, {
                 "ratio": 5,
@@ -80,10 +88,11 @@
                     "open_contactor_2": "d9",
                     "close_contactor_1": "d10",
                     "close_contactor_2": "d11",
-                    "open_motor": "d27",
-                    "close_motor": "d28",
-                    "fog_output": "d29",
-                    "lights_output": "d30",
+                    "open_motor": "d29",
+                    "close_motor": "d30",
+                    "fog_output": "d31",
+                    "exhaust_output": "d31",
+                    "lights_output": "d33",
                     "output_on_state": 0,
                     "input_on_state": 0
                 }]
