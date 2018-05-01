@@ -7,7 +7,7 @@
     "blueprint_file": "/home/pi/middleware/blueprint.json",
     "middleware_runner_file": "/home/pi/middleware/run_server.sh",
 
-    "middleware_commit": "7ec8361513f5a8c438b4f9c3d86bcfee44c905d6",
+    "middleware_commit": "c8fa4b1b9a48e735bdc1089007c26acee407714d",
 
     "extra_commands_after": [
         "sudo chmod +x /etc/init.d/run_server"

@@ -91,7 +91,7 @@
                     "open_motor": "d29",
                     "close_motor": "d30",
                     "fog_output": "d31",
-                    "exhaust_output": "d31",
+                    "exhaust_output": "d32",
                     "lights_output": "d33",
                     "output_on_state": 0,
                     "input_on_state": 0
