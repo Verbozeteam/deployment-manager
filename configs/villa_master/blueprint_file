@@ -27,18 +27,10 @@
                 }, {
                     "category": "light_switches",
                     "name": {
-                        "en": "Chandlier",
+                        "en": "Chandelier",
                         "ar": "الثريا"
                     },
                     "switch_port": "d22",
-                    "on_state": 0
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Chandlier Bed",
-                        "ar": "ثريا السرير"
-                    },
-                    "switch_port": "d23",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
@@ -61,12 +53,12 @@
                 "ratio": 3,
                 "name": {
                     "en": "Curtains",
-                    "ar": ""
+                    "ar": "الستائر"
                 },
                 "things": [{
                     "category": "curtains",
                     "name": {
-                        "english": "Curtain 1"
+                        "en": "Curtain 1"
                     },
                     "up_port": "d26",
                     "down_port": "d27",
@@ -74,7 +66,7 @@
                 }, {
                     "category": "curtains",
                     "name": {
-                        "english": "Curtain 2"
+                        "en": "Curtain 2"
                     },
                     "up_port": "d28",
                     "down_port": "d29",
@@ -82,7 +74,7 @@
                 }, {
                     "category": "curtains",
                     "name": {
-                        "english": "Curtain 3"
+                        "en": "Curtain 3"
                     },
                     "up_port": "d30",
                     "down_port": "d31",
@@ -90,7 +82,7 @@
                 }, {
                     "category": "curtains",
                     "name": {
-                        "english": "Curtain 4"
+                        "en": "Curtain 4"
                     },
                     "up_port": "d32",
                     "down_port": "d33",
@@ -110,7 +102,7 @@
                     },
                     "temperature_port": "v0",
                     "fan_low_port": "d34",
-                    "fan_medium_port": "d35",
+                    "fan_med_port": "d35",
                     "fan_high_port": "d36",
                     "digital_valve_port": "d37",
                     "virtual_port_data": [[0, 0]],

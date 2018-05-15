@@ -9,7 +9,15 @@ export default class DeploymentForm extends React.Component {
         target: "",
         comment: "",
         params: [],
+        options: {},
+        diskPath: "",
+        disksList: [],
+        disabledRepoIds: [],
     };
+
+    refreshDisks() {
+        DataManager.fetchMountingDevices(disks => this.setState({disksList: disks, diskPath: disks.length > 0 ? disks[0] : this.state.diskPath}));
+    }
 
     resetState(config) {
         var _params = DataManager.getConfigFiles(config, true).map(f => DataManager.getConfigFileParameters(f));
@@ -17,17 +25,29 @@ export default class DeploymentForm extends React.Component {
         for (var i = 0; i < _params.length; i++)
             params = params.concat(_params[i]);
 
+        var repositories = DataManager.getConfigRepositories(config, true);
+        var buildOptions = [];
+        for (var i = 0; i < repositories.length; i++)
+            buildOptions = buildOptions.concat(DataManager.getRepositoryBuildOptions(repositories[i].repo));
+        var boDict = {};
+        for (var i = 0; i < buildOptions.length; i++)
+            boDict[buildOptions[i].option_name] = {...buildOptions[i], isChecked: false};
+
         this.setState({
             burnFirmware: false,
             firmware: DataManager.getAllFirmwares()[0].id,
             target: "",
             comment: "",
             params: params,
+            options: boDict,
+            diskPath: "",
+            disabledRepoIds: [],
         })
     }
 
     componentWillMount() {
         this.resetState(this.props.config);
+        this.refreshDisks();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -36,10 +56,10 @@ export default class DeploymentForm extends React.Component {
 
     deploy() {
         const { config } = this.props;
-        const { firmware, target, comment, params, burnFirmware } = this.state;
+        const { firmware, target, comment, params, burnFirmware, options, diskPath, disabledRepoIds } = this.state;
 
-        if (target.trim() == "") {
-            console.log("Missing 'target'");
+        if (target.trim() == "" || diskPath.trim() == "") {
+            console.log("Missing 'target' or 'Mounting Disk Path'");
             return;
         }
 
@@ -50,22 +70,32 @@ export default class DeploymentForm extends React.Component {
             }
         }
 
-        DataManager.deploy(config, burnFirmware ? firmware : -1, target, comment, params);
+        var optionIds = Object.values(options).filter(o => o.isChecked).map(o => o.id);
+        DataManager.deploy(config, diskPath, burnFirmware ? firmware : -1, target, comment, params, optionIds, disabledRepoIds);
     }
 
     render() {
         const { config } = this.props;
-        const { firmware, target, comment, params, burnFirmware } = this.state;
+        const { firmware, target, comment, params, burnFirmware, options, diskPath, disksList, disabledRepoIds } = this.state;
 
         var firmwareList = DataManager.getAllFirmwares().map(f => <option key={'opf-'+f.id} value={f.id}>{f.local_path}</option>);
+        var diskList = disksList.concat("").map(d => <option key={'opd-'+d} value={d}>{d}</option>);
+        var depRepos = DataManager.getConfigRepositories(config, true);
 
         return (
             <div style={styles.container}>
                 <div style={styles.row}>
+                    <div style={styles.fieldName}>Mounting Disk Path</div>
+                    <div style={styles.fieldValue}>
+                        <NiceButton extraStyle={{width: 200, float: "right"}} onClick={this.refreshDisks.bind(this)}>Refresh</NiceButton>
+                        <select onChange={e => this.setState({diskPath: e.target.value})}>{diskList}</select>
+                    </div>
+                </div>
+                <div style={styles.row}>
                     <div style={styles.fieldName}>Firmware</div>
                     <div style={styles.fieldValue}>
                         <input type={"checkbox"} checked={burnFirmware} onChange={e => this.setState({burnFirmware: e.target.checked})} />
-                        <select>{firmwareList}</select>
+                        <select onChange={e => this.setState({firmware: e.target.value})}>{firmwareList}</select>
                     </div>
                 </div>
                 <div style={styles.row}>
@@ -76,6 +106,26 @@ export default class DeploymentForm extends React.Component {
                     <div style={styles.fieldName}>Comment</div>
                     <textarea style={styles.fieldValue} value={comment} onChange={e => this.setState({comment: e.target.value})} rows={4} />
                 </div>
+                <div style={styles.row}>
+                    <div style={styles.fieldName}>Repositories to clone</div>
+                    <div style={styles.fieldValue}></div>
+                </div>
+                {depRepos.map(repo =>
+                    <div key={'rbo-'+repo.id} style={styles.row}>
+                        <div style={styles.fieldName}>{((rp) => rp.slice(rp.slice(0, rp.length-2).lastIndexOf('/')))(DataManager.getRepoById(repo.repo).remote_path)}</div>
+                        <input style={styles.fieldValue} type={"checkbox"} checked={disabledRepoIds.indexOf(repo.id) == -1} onChange={e => this.setState({disabledRepoIds: e.target.checked ? disabledRepoIds.filter(rid => rid != repo.id) : disabledRepoIds.concat(repo.id)})} />
+                    </div>
+                )}
+                <div style={styles.row}>
+                    <div style={styles.fieldName}>Build options:</div>
+                    <div style={styles.fieldValue}></div>
+                </div>
+                {Object.keys(options).map(option_name =>
+                    <div key={'bo-'+option_name} style={styles.row}>
+                        <div style={styles.fieldName}>{option_name}</div>
+                        <input style={styles.fieldValue} type={"checkbox"} checked={options[option_name].isChecked} onChange={e => this.setState({options: {...options, [option_name]: {...options[option_name], isChecked: e.target.checked}}})} />
+                    </div>
+                )}
                 <div style={styles.row}>
                     <div style={styles.fieldName}>Parameters:</div>
                     <div style={styles.fieldValue}></div>

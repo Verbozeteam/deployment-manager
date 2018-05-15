@@ -20,7 +20,7 @@
                 }, {
                     "category": "light_switches",
                     "name": {
-                        "en": "Chandlier",
+                        "en": "Chandelier",
                         "ar": "الثريا"
                     },
                     "switch_port": "d22",
@@ -43,7 +43,7 @@
                 "things": [{
                     "category": "curtains",
                     "name": {
-                        "english": "Curtain 1"
+                        "en": "Curtain 1"
                     },
                     "up_port": "d25",
                     "down_port": "d26",
@@ -51,7 +51,7 @@
                 }, {
                     "category": "curtains",
                     "name": {
-                        "english": "Curtain 2"
+                        "en": "Curtain 2"
                     },
                     "up_port": "d27",
                     "down_port": "d28",
@@ -60,7 +60,7 @@
             }, {
                 "ratio": 1,
                 "name": {
-                    "en": "Water fountains",
+                    "en": "Water Fountains",
                     "ar": "النوافير"
                 },
                 "things": [{

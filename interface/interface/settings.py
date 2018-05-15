@@ -102,6 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# WEBPACK
 WEBPACK_LOADER = {
     'DEFAULT': {
             'BUNDLE_DIR_NAME': '/bundles/',
@@ -109,6 +110,17 @@ WEBPACK_LOADER = {
         }
 }
 
+# CELERY
+# CELERY_BROKER_URL = 'django://'
+CELERY_BEAT_SCHEDULE = {
+    'fetch-repos': {
+        'task': 'ui.tasks.fetch_repositories',
+        'schedule': 120.0,
+    },
+}
+CELERY_TIMEZONE = 'UTC'
+
+# STATIC SHITZ
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'frontend'),

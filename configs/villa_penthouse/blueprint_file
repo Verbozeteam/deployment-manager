@@ -7,29 +7,36 @@
             "panels": [{
                 "ratio": 5,
                 "name": {
-                    "en": "Room Lights",
+                    "en": "Penthouse Lights",
                     "ar": "إضائة الغرفة"
                 },
                 "things": [{
                     "category": "dimmers",
                     "name": {
-                        "en": "Spotlight",
-                        "ar": "ضوء المسرح"
+                        "en": "Spotlight 1",
+                        "ar": "ضوء المسرح 1"
                     },
                     "dimmer_port": "d4"
                 }, {
+                    "category": "dimmers",
+                    "name": {
+                        "en": "Spotlight 2",
+                        "ar": "ضوء المسرح 2"
+                    },
+                    "dimmer_port": "d5"
+                }, {
                     "category": "light_switches",
                     "name": {
-                        "en": "Chandelier 1",
-                        "ar": "الثريا 1"
+                        "en": "Colored Wall",
+                        "ar": "الحائط الملون"
                     },
                     "switch_port": "d22",
                     "on_state": 0
                 }, {
                     "category": "light_switches",
                     "name": {
-                        "en": "Chandelier 2",
-                        "ar": "الثريا 2"
+                        "en": "White Wall",
+                        "ar": "الحائط الأبيض"
                     },
                     "switch_port": "d23",
                     "on_state": 0
@@ -40,29 +47,6 @@
                         "ar": "المخفي"
                     },
                     "switch_port": "d24",
-                    "on_state": 0
-                }, {
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Pool Stars",
-                        "ar": "نجوم المسبح"
-                    },
-                    "switch_port": "d25",
-                    "on_state": 0
-                }]
-            }, {
-                "ratio": 5,
-                "name": {
-                    "en": "Balcony Lights",
-                    "ar": "البلكونة"
-                },
-                "things": [{
-                    "category": "light_switches",
-                    "name": {
-                        "en": "Balcony",
-                        "ar": "البلكونة"
-                    },
-                    "switch_port": "d34",
                     "on_state": 0
                 }]
             }, {
@@ -76,33 +60,41 @@
                     "name": {
                         "en": "Curtain 1"
                     },
-                    "up_port": "d26",
-                    "down_port": "d27",
+                    "up_port": "d25",
+                    "down_port": "d26",
                     "on_state": 0
                 }, {
                     "category": "curtains",
                     "name": {
                         "en": "Curtain 2"
                     },
-                    "up_port": "d28",
-                    "down_port": "d29",
+                    "up_port": "d27",
+                    "down_port": "d28",
                     "on_state": 0
-                }, {
-                    "category": "curtains",
+                }]
+            }, {
+                "ratio": 5,
+                "name": {
+                    "en": "Penthouse Ceiling",
+                    "ar": ""
+                },
+                "things": [{
+                    "category": "penthouse_disco",
                     "name": {
-                        "en": "Curtain 3"
+                        "en": "Penthouse Ceiling",
+                        "ar": "السقف"
                     },
-                    "up_port": "d30",
-                    "down_port": "d31",
-                    "on_state": 0
-                }, {
-                    "category": "curtains",
-                    "name": {
-                        "en": "Curtain 4"
-                    },
-                    "up_port": "d32",
-                    "down_port": "d33",
-                    "on_state": 0
+                    "open_contactor_1": "d8",
+                    "open_contactor_2": "d9",
+                    "close_contactor_1": "d10",
+                    "close_contactor_2": "d11",
+                    "open_motor": "d29",
+                    "close_motor": "d30",
+                    "fog_output": "d31",
+                    "exhaust_output": "d32",
+                    "lights_output": "d33",
+                    "output_on_state": 0,
+                    "input_on_state": 0
                 }]
             }]
         }],
